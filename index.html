@@ -1,0 +1,372 @@
+
+<h2 class="sr-only">90-day data engineering challenge tracker with daily tasks and scenario-based interview questions covering SQL, Python, PySpark, BigQuery, Airflow, Data Modeling, and System Design</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+#app{font-family:var(--font-sans);color:var(--color-text-primary);min-height:600px}
+.hdr{background:var(--color-background-secondary);padding:18px 20px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.pbar-bg{height:7px;background:var(--color-border-tertiary);border-radius:99px;margin:10px 0 4px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:99px;background:#185FA5;transition:width .4s}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.stat{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:7px 14px;text-align:center}
+.stat-val{font-size:18px;font-weight:500}
+.stat-lbl{font-size:11px;color:var(--color-text-secondary)}
+.filters{padding:12px 20px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary)}
+.fbtn{padding:4px 12px;border-radius:99px;border:0.5px solid var(--color-border-secondary);font-size:12px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary);font-family:var(--font-sans);transition:all .15s}
+.fbtn.active{color:#fff;border-color:transparent}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;padding:16px 20px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);cursor:pointer;overflow:hidden;transition:border-color .15s}
+.card:hover{border-color:var(--color-border-primary)}
+.card.done{opacity:.65;border-color:var(--color-border-success)}
+.ctop{height:3px}
+.cbody{padding:10px 12px}
+.chead{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.cday{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
+.ctag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:99px}
+.ctask{font-size:11px;color:var(--color-text-secondary);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px}
+.cq{font-size:10px;color:var(--color-text-tertiary);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cbtn{width:22px;height:22px;border-radius:50%;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.detail{margin:0 20px 16px;background:var(--color-background-primary);border:0.5px solid var(--color-border-primary);border-radius:var(--border-radius-lg);overflow:hidden}
+.dtop{height:4px}
+.dbody{padding:18px 20px}
+.dhead{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.dclose{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:6px;cursor:pointer;font-size:16px;padding:2px 8px;font-family:var(--font-sans);color:var(--color-text-secondary)}
+.dlabel{font-size:10px;font-weight:500;letter-spacing:.6px;color:var(--color-text-tertiary);margin-bottom:6px}
+.dbox{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px;margin-bottom:12px}
+.dtext{font-size:13px;line-height:1.7;color:var(--color-text-primary)}
+.dq{background:#fefce8;border-radius:var(--border-radius-md);padding:14px}
+.dqtext{font-size:13px;line-height:1.7;color:var(--color-text-primary)}
+.dnav{display:flex;justify-content:space-between;margin-top:14px}
+.dnbtn{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:var(--font-sans);color:var(--color-text-primary)}
+.dnbtn:disabled{opacity:.35;cursor:default}
+.done-mark{background:#16a34a;color:#fff;border-color:#16a34a}
+.phase-lbl{font-size:10px;color:var(--color-text-tertiary);margin-top:4px}
+
+body{
+  background:linear-gradient(135deg,#0f172a,#111827,#1e293b);
+  padding:20px;
+}
+#app{
+  max-width:1450px;
+  margin:auto;
+  border-radius:28px;
+  overflow:hidden;
+  backdrop-filter:blur(14px);
+  background:rgba(255,255,255,0.92);
+  box-shadow:0 20px 60px rgba(0,0,0,0.35);
+}
+.hdr{
+  background:linear-gradient(135deg,#0f172a,#1e3a8a);
+  color:white;
+  padding:28px 30px 20px;
+}
+.card{
+  transition:all .25s ease;
+  border:none;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+.card:hover{
+  transform:translateY(-6px) scale(1.02);
+  box-shadow:0 18px 35px rgba(0,0,0,0.15);
+}
+.card.done{
+  opacity:.92;
+  background:linear-gradient(135deg,#ecfdf5,#f0fdf4);
+}
+.cbody{
+  padding:14px;
+}
+.ctask{
+  font-size:12px;
+}
+.cq{
+  margin-top:8px;
+}
+.detail{
+  box-shadow:0 10px 30px rgba(0,0,0,0.12);
+}
+.dbox{
+  border-left:5px solid #2563eb;
+}
+.dq{
+  border-left:5px solid #f59e0b;
+}
+.fbtn{
+  font-weight:600;
+  padding:8px 16px;
+}
+.fbtn:hover{
+  transform:translateY(-1px);
+}
+.stat{
+  backdrop-filter:blur(10px);
+  border:none;
+  min-width:95px;
+  box-shadow:0 5px 12px rgba(0,0,0,0.08);
+}
+.stat-val{
+  font-size:20px;
+  font-weight:700;
+}
+.pbar-bg{
+  height:10px;
+  background:rgba(255,255,255,0.18);
+}
+.pbar-fill{
+  background:linear-gradient(90deg,#22c55e,#38bdf8);
+}
+.grid{
+  gap:16px;
+}
+
+</style>
+
+<div id="app">
+<div class="hdr">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+    <div>
+      <div style="font-size:28px;font-weight:700;letter-spacing:-0.5px">🚀 90-Day Data Engineering Challenge</div>
+      <div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">SQL · Python · PySpark · BigQuery · Airflow · Data Modeling · System Design</div>
+<div style="font-size:11px;color:var(--color-text-tertiary);margin-top:6px">
+  Progress is automatically saved in your browser even after closing the file.
+</div>
+
+    </div>
+    <div class="stats" id="stats-area"></div>
+  </div>
+  <div class="pbar-bg"><div class="pbar-fill" id="pbar" style="width:0%"></div></div>
+  <div style="font-size:12px;color:#dbeafe;font-weight:500" id="pct-lbl">0 of 90 days completed</div>
+</div>
+<div class="filters" id="filters-area"></div>
+<div id="detail-area"></div>
+<div class="grid" id="grid-area"></div>
+
+<div style="padding:20px;text-align:center;font-size:12px;color:#64748b;border-top:1px solid #e2e8f0">
+  Built for focused daily practice • Your progress is saved automatically 💾
+</div>
+
+</div>
+
+<script>
+const TC={
+  SQL:{bg:"#185FA5",light:"#E6F1FB",dark:"#0C447C",tag:"#B5D4F4"},
+  Python:{bg:"#BA7517",light:"#FAEEDA",dark:"#854F0B",tag:"#FAC775"},
+  PySpark:{bg:"#0F6E56",light:"#E1F5EE",dark:"#085041",tag:"#9FE1CB"},
+  BigQuery:{bg:"#378ADD",light:"#E6F1FB",dark:"#185FA5",tag:"#85B7EB"},
+  Airflow:{bg:"#A32D2D",light:"#FCEBEB",dark:"#791F1F",tag:"#F7C1C1"},
+  Modeling:{bg:"#534AB7",light:"#EEEDFE",dark:"#3C3489",tag:"#CECBF6"},
+  Design:{bg:"#3B6D11",light:"#EAF3DE",dark:"#27500A",tag:"#C0DD97"}
+};
+
+const DAYS=[
+{day:1,topic:"SQL",phase:"Phase 1 — SQL",task:"Write all 8 join types on a customers/orders schema: INNER, LEFT, RIGHT, FULL OUTER, CROSS, LEFT ANTI, RIGHT ANTI, FULL ANTI. Create sample data, run each query, validate row counts for each.",question:"You have customers (10M rows) and orders (500M rows). Write 3 queries: ① customers who NEVER ordered ② customers whose LAST order was 90+ days ago ③ ordered in Jan but NOT Feb. Which join type for each and why? What are the performance implications?"},
+{day:2,topic:"SQL",phase:"Phase 1 — SQL",task:"Write ROW_NUMBER, RANK, DENSE_RANK, NTILE(4) in one query on a sales table. Explain the output difference when two rows tie in value.",question:"Your manager wants a leaderboard of top 5 sales reps per region for Q4. Some reps have the same revenue. Show rank (with gap for ties), dense rank (no gaps), and percentile bucket — without nested subqueries. Use QUALIFY in BigQuery."},
+{day:3,topic:"SQL",phase:"Phase 1 — SQL",task:"Use LAG, LEAD, FIRST_VALUE, LAST_VALUE on a monthly_sales table. Calculate MoM change, next-month value, and compare each month to first/last month of the year.",question:"You need: ① days since a customer's PREVIOUS purchase ② days until their NEXT purchase ③ compare current spend to their very first purchase. Which window functions do you use and why is ORDER BY mandatory here?"},
+{day:4,topic:"SQL",phase:"Phase 1 — SQL",task:"Write a 3-month rolling average, a running total, and a 7-day moving sum using ROWS BETWEEN. Then write the same using RANGE BETWEEN and compare on duplicate dates.",question:"Finance wants a cumulative revenue report that resets every year (partitioned by year), shows a 3-month rolling avg alongside running total, and flags any month where revenue dropped 20%+ vs the previous month. Write the full query."},
+{day:5,topic:"SQL",phase:"Phase 1 — SQL",task:"Write a CTE to find top 10 customers by revenue. Then write a recursive CTE to traverse an employee org chart 4 levels deep. Explain when CTEs are materialised vs inline.",question:"You have a categories table with parent_category_id (up to 6 levels deep). Find all leaf-level categories under Electronics and their full path. Write this as a recursive CTE. What is the termination condition and how do you prevent infinite loops?"},
+{day:6,topic:"SQL",phase:"Phase 1 — SQL",task:"Write GROUP BY with HAVING, then ROLLUP (subtotals), CUBE (all combinations), and GROUPING SETS (custom combos). Verify the NULL grouping markers in each output.",question:"Your BI team needs one query returning: total per region, total per category, total per region+category, and a grand total — all in one result set. How? How do you tell the difference between a ROLLUP NULL vs an actual NULL value in the data?"},
+{day:7,topic:"SQL",phase:"Phase 1 — SQL",task:"Deduplicate a customers table using all 4 methods: DISTINCT, GROUP BY, ROW_NUMBER CTE, and QUALIFY. Compare which preserves the most recent vs oldest record.",question:"After a batch load, your customers table has duplicates — same customer_id but different updated_at. You need only the most recent record per customer. Write 3 approaches. Which do you use in production and why? What if you also need to track which columns changed?"},
+{day:8,topic:"SQL",phase:"Phase 1 — SQL",task:"Run EXPLAIN ANALYZE on a slow join query. Add an index, rewrite with filter pushdown, avoid function on indexed column. Compare execution plans before and after each change.",question:"A query joining orders (500M rows) to products (1M rows) filtering by DATE(created_at)='2024-01-01' runs for 45 minutes. Walk through your optimisation steps. What 3 things do you check first? How does wrapping a column in a function break index usage?"},
+{day:9,topic:"SQL",phase:"Phase 1 — SQL",task:"Create RANGE-partitioned table by date, LIST-partitioned by region, and HASH-partitioned by user_id. Write queries that trigger partition pruning for each. Verify with EXPLAIN.",question:"You have a 5TB fact table partitioned by day. A query scanning 3 years of data is extremely slow. How do you redesign the partitioning strategy? What is the max partition count target? How does partition pruning work and what can break it?"},
+{day:10,topic:"SQL",phase:"Phase 1 — SQL",task:"Build a full SCD Type 2 table for dim_customer. Implement close+insert logic for an address change. Write a point-in-time query. Add a surrogate key sequence.",question:"You're building a data warehouse where historical orders must show the address at the time of order. How do you implement SCD Type 2? What columns do you add, what is the upsert logic, and how do you query 'what was this customer's address on March 15 2023'?"},
+{day:11,topic:"SQL",phase:"Phase 1 — SQL",task:"Write 5 analytical patterns: running total, YoY comparison, top-3 per group, 7-day moving avg, and gaps-and-islands for consecutive active days. Window functions only.",question:"Your analyst asks: show monthly revenue, its % of annual total, comparison to same month last year, and flag any month with 10%+ drop. Write a single query computing all of this. What window functions do you combine and in what order?"},
+{day:12,topic:"SQL",phase:"Phase 1 — SQL",task:"SQL challenge: write a query finding second highest salary per department, detect gaps in invoice number sequences, and pivot monthly sales data into columns.",question:"Hard SQL: transactions table with user_id, amount, transaction_date. Single query to find users who ① spent more in month 2 than month 1 ② had 3+ consecutive days with a transaction ③ whose average transaction is in top 10% of all users. No temp tables."},
+{day:13,topic:"Python",phase:"Phase 2 — Python",task:"Write list/dict/set comprehensions, Counter, defaultdict, zip, enumerate, sorted with key. Solve: find duplicate elements, group records by key, merge dicts with conflict resolution.",question:"You receive raw JSON logs as a list of dicts. Write a Python function to: ① deduplicate by event_id keeping latest timestamp ② group events by user_id ③ find users with 5+ events within any 1-hour window. Which data structures do you choose and why?"},
+{day:14,topic:"Python",phase:"Phase 2 — Python",task:"Write a DataPipeline class with extract(), transform(), load(). Use @property, @staticmethod, @classmethod. Implement __repr__, __enter__, __exit__ for context manager usage.",question:"Design a Python class for a reusable ETL pipeline that supports context manager syntax (with statement), configurable retry logic, step logging, and raises custom exceptions on failure. How do you make it extensible for different sources without modifying the base class?"},
+{day:15,topic:"Python",phase:"Phase 2 — Python",task:"Write a decorator that retries a function N times with exponential backoff. Write a generator that yields batches of records from a large file. Build a pipeline using functools.reduce.",question:"You're calling an external API that rate-limits to 100 req/min and occasionally returns 429 or 503. Write a Python decorator handling retries with exponential backoff, jitter, and max wait time. How do you make it configurable per function call?"},
+{day:16,topic:"Python",phase:"Phase 2 — Python",task:"Implement custom exceptions, contextlib.contextmanager, logging with different levels, and try-except-finally for a database connection lifecycle. Handle partial failures gracefully.",question:"Your ETL job runs daily and fails silently — data loads but is wrong, discovered the next day. How do you redesign the error handling strategy? What logging levels do you use, how do you handle partial failures, and how do you ensure the pipeline is restartable?"},
+{day:17,topic:"Python",phase:"Phase 2 — Python",task:"Read a large CSV in 10K row chunks, transform each chunk (clean nulls, type cast, deduplicate), write to Parquet with proper schema. Use pathlib for file handling.",question:"You need to process a 50GB CSV on a machine with 8GB RAM. How do you read and process it without running out of memory? Write the approach using chunked reading, what transformations you apply per chunk, and how you handle records that span chunk boundaries."},
+{day:18,topic:"Python",phase:"Phase 2 — Python",task:"Use pandas: read CSV, groupby, pivot_table, merge (all join types), apply custom function, handle nulls, export to multiple formats. Profile performance with %timeit.",question:"A pandas script takes 2 hours on a 5M row DataFrame. It uses iterrows() and multiple chained operations. Identify the 3 biggest performance issues and rewrite each using vectorised operations, apply(), or numpy."},
+{day:19,topic:"Python",phase:"Phase 2 — Python",task:"Write a script calling a paginated REST API: handle auth, rate limiting, and write each page to GCS as JSON. Use requests, google-cloud-storage, and proper retry logic.",question:"You're building a pipeline to ingest data from a REST API that ① paginates via cursor ② rate-limits to 300 req/min ③ occasionally times out. Write a robust Python ingestion script that is idempotent, checkpoints progress, and can resume after a failure."},
+{day:20,topic:"Python",phase:"Phase 2 — Python",task:"Write unit tests for an ETL function using pytest. Mock GCS and BigQuery calls. Write parametrised tests and a fixture for sample data. Aim for 90%+ coverage.",question:"How do you test a PySpark or BigQuery ETL function that reads from GCS and writes to BigQuery without running actual cloud services? Describe your mocking strategy, edge cases you test for (empty data, schema mismatch, duplicate keys), and how you structure test files."},
+{day:21,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Draw the full Spark architecture from memory: Driver, Executor, DAG/Task Scheduler, YARN. Explain the complete lifecycle of a PySpark job from spark-submit to result.",question:"Walk through exactly what happens when you call df.groupBy('region').agg(sum('amount')).show(). Cover: lazy evaluation, DAG creation, stage boundary (where and why), task generation, shuffle, executor execution, and result collection."},
+{day:22,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Create RDDs using parallelize and textFile. Apply map, flatMap, filter, reduceByKey, groupByKey, sortByKey. Prove why reduceByKey is preferred over groupByKey.",question:"You have a 200GB log file on HDFS. Count occurrences of each error code as an RDD job. Why do you prefer reduceByKey over groupByKey? What happens on the executor side with each approach during the shuffle phase?"},
+{day:23,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Read Parquet from GCS with schema inference vs explicit schema. Apply withColumn, select, alias, cast, when/otherwise, regexp_extract. Write back as partitioned Parquet.",question:"Your team ingests raw JSON to GCS. How do you read it in PySpark with proper schema enforcement (not inferSchema), handle malformed records gracefully without failing the job, and write output partitioned by date with snappy compression?"},
+{day:24,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Demonstrate lazy evaluation: chain 5 transformations (filter, withColumn, select, dropDuplicates, join), then call explain() before and after adding an action. Observe the DAG in Spark UI.",question:"A junior engineer says 'Spark is slow — every transformation takes forever.' You see they're calling .show() after every transformation in a loop. What is the real problem? How does lazy evaluation work and how would you restructure their code?"},
+{day:25,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Implement ROW_NUMBER, RANK, LAG, LEAD, and running SUM using Window in PySpark. Partition by region, order by date. Apply to deduplicate a dataset keeping the latest record per key.",question:"You receive daily snapshots of a customers table in GCS. Each snapshot has the full table. Produce: current state (deduplicated) plus a change log (new/updated/deleted vs yesterday). How do you implement this in PySpark using Window functions?"},
+{day:26,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Write all join types in PySpark: inner, left, right, full, left_anti, left_semi, cross. Then write a join on multiple keys, a join with non-equi condition, and a self-join.",question:"You need to join a 500M row transactions table with a 2M row customers table and a 50K row products table. What join ORDER do you apply and why? How does Spark physically execute the join? When do you switch to a broadcast join and what threshold do you set?"},
+{day:27,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Write 3 scenarios: broadcast join with small table, regular sort-merge join, and identify when NOT to broadcast. Configure autoBroadcastJoinThreshold. Use explain() to verify strategy.",question:"Your PySpark job joins a 400GB fact table with a 15MB lookup table. It's taking 2 hours. You see SortMergeJoin in the explain plan. How do you fix this? What config do you set? What if the lookup table is 250MB — too big to broadcast? What are your options?"},
+{day:28,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Run df.explain(True) on a filter + join + groupBy query. Identify predicate pushdown, column pruning, and physical join strategy. Force a specific join strategy using hints.",question:"Describe what the Catalyst Optimizer does between when you write df.join(other).filter().groupBy() and when tasks start executing. What is predicate pushdown, column pruning, and constant folding? How does Catalyst decide between BroadcastHashJoin, SortMergeJoin, and ShuffleHashJoin?"},
+{day:29,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Compare repartition(200), repartition(200,'key'), coalesce(10) on a 1GB dataset. Verify partition sizes. Decide the correct approach before a join and before a write.",question:"After your Spark job runs, you see 10,000 tiny Parquet files in GCS (each ~1KB). What caused this? How do you fix it at write time? What is the difference between coalesce and repartition for this use case and how many output files should you aim for?"},
+{day:30,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Configure shuffle partitions for small (100K rows), medium (100M rows), and large (10B rows) datasets. Observe the difference in Spark UI stage details for each setting.",question:"Your Spark groupBy job on 500M rows uses 200 shuffle partitions (default). Spark UI shows 190 tasks finishing in 5 min and 10 tasks taking 2.5 hours. What is this problem called, how do you diagnose it precisely, and what are 3 different fixes?"},
+{day:31,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Simulate a skewed dataset (one key has 80% of data). Diagnose via Spark UI. Fix using ① AQE skew join ② salting technique ③ repartitioning by key before join. Compare run times.",question:"You're joining order_items (2B rows) with products (500K rows) by product_id. product_id='UNKNOWN' appears in 40% of rows. Join takes 4 hours. How do you detect this is a skew problem vs just large data? Write the salting approach step by step."},
+{day:32,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Enable AQE and verify all 3 features: ① dynamic partition coalescing ② dynamic join strategy switching ③ dynamic skew join. Use explain() before and after to see plan changes.",question:"What is Adaptive Query Execution and how is it different from the static Catalyst optimizer? Give a concrete example where AQE changes the join strategy at runtime. What statistics does Spark collect during execution to make this decision? When would AQE NOT help?"},
+{day:33,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Cache a DataFrame, trigger with count(), use it twice, then unpersist(). Try MEMORY_ONLY, MEMORY_AND_DISK, DISK_ONLY. Check the Storage tab in Spark UI for each level.",question:"You have a PySpark job that reads the same large DataFrame 4 times for different aggregations. A colleague suggests caching it. What are the different storage levels, how do you choose one, and what is the cache eviction policy? What happens if cached data doesn't fit in memory?"},
+{day:34,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Cause an OOM error by collecting a large RDD to the driver. Fix by: ① increasing memory ② using take() instead of collect() ③ writing directly to storage. Identify GC pause causes.",question:"Your Spark executor throws java.lang.OutOfMemoryError: GC overhead limit exceeded. Walk through the executor memory regions (Reserved, User, Execution, Storage) and their default fractions. What are 5 different causes of OOM in Spark and the fix for each?"},
+{day:35,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Register a DataFrame as a temp view, write SparkSQL queries on it including CTEs and window functions. Use spark.catalog to list tables. Combine DataFrame API with SQL in one job.",question:"When should you use the DataFrame API vs SparkSQL? In terms of the Catalyst optimizer are they equivalent? A team wants to migrate complex Hive SQL with UDFs to PySpark. What is your migration strategy and what are the performance trade-offs?"},
+{day:36,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Read a directory of partitioned Parquet files from GCS. Demonstrate partition discovery. Use predicate pushdown to read only specific partitions. Profile bytes read in Spark UI.",question:"You have 3 years of daily Parquet files on GCS partitioned as /year=/month=/day=/. Your Spark job reads all 3 years but needs only last 30 days — it reads 2TB but needs 50GB. What's wrong and how do you fix it? How does Spark's predicate pushdown interact with file-level partitioning?"},
+{day:37,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Write a PySpark job: read from GCS, apply 5 transformations, deduplicate using Window, write partitioned Parquet with bucketBy for a common join key. Verify with Spark UI.",question:"How do you design a PySpark job for idempotent daily processing? Handle: re-running for the same date (overwrite only that partition), schema evolution (new columns in source), and partial failures (job failed halfway through writing). Describe the design end-to-end."},
+{day:38,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Write a Structured Streaming job: read from a file source, apply a 5-minute window aggregation, handle late data with watermark, write to Delta Lake with checkpointing.",question:"You're building a real-time dashboard showing sales totals updated every minute. Events can arrive up to 10 minutes late due to mobile sync delays. How do you design the Structured Streaming job? What is a watermark, how does it affect state size, and what happens to late records after the watermark?"},
+{day:39,topic:"PySpark",phase:"Phase 3 — PySpark",task:"Use the BigQuery Spark connector: read a BQ table into PySpark with filter pushdown, transform, and write back to a different BQ table. Use a temp GCS bucket correctly.",question:"Your team wants to use PySpark (on Dataproc) to process data that lives in BigQuery. Options: export to GCS first or use the BQ connector. What are the trade-offs of each? How does the BQ Storage Read API differ from the classic connector and when do you use each?"},
+{day:40,topic:"PySpark",phase:"Phase 3 — PySpark",task:"End-to-end challenge: Read raw CSV from GCS → deduplicate → enrich via broadcast join → aggregate → write partitioned Parquet → verify output. Tune for performance (AQE, partitions, caching).",question:"HARD: You have a 1TB dataset of raw clickstream events (user_id, event_type, ts, session_id). Design and write a PySpark job that ① deduplicates ② sessionizes (30-min gap logic) ③ computes per-session metrics ④ writes output partitioned by date. How do you handle skew on popular events?"},
+{day:41,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Without notes, describe all 5 BQ architecture components and their roles. Explain how a query flows from CLI through Dremel tree to Capacitor files via Jupiter. Draw it.",question:"A query scanning 500GB in BigQuery returns results in 8 seconds. Explain physically HOW this is possible. Walk through: how Capacitor format enables column skipping, how Dremel distributes the query to leaf nodes, how Jupiter transfers data, and Borg's role."},
+{day:42,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Create tables with all 3 partition types: DATE column, Ingestion time, Integer range. Write queries using partition pruning for each. Verify with INFORMATION_SCHEMA.PARTITIONS.",question:"You have a 10TB orders table and analysts always filter by order_date and region. How do you partition it? What is require_partition_filter and why would you enable it? What is the max partition count and what do you do when you approach it?"},
+{day:43,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Create a table partitioned by date and clustered by (region, product_id, status). Write 4 queries benefiting from both partition AND cluster pruning. Verify bytes processed via INFORMATION_SCHEMA.",question:"What is the difference between partitioning and clustering in BigQuery? A query filters on date AND region AND product_id — how does each help, in what order does BQ apply them, and what is the maximum benefit achievable? When would you cluster a non-partitioned table?"},
+{day:44,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Create a table with a STRUCT column containing nested customer info. Write queries using dot notation, SELECT customer.name, filter on nested fields, and CREATE OR REPLACE using STRUCT literals.",question:"You're designing a BigQuery schema for an e-commerce order system where each order has customer info and multiple line items. Would you use STRUCT, ARRAY, or separate tables? What are the trade-offs for query performance, storage, and maintainability?"},
+{day:45,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Create a table with ARRAY<STRUCT<>> for order line items. Use UNNEST in FROM clause, LEFT JOIN UNNEST, ARRAY_LENGTH, ARRAY_AGG, and ARRAY_CONTAINS. Write an aggregation on unnested data.",question:"You have a transactions table where each row has an ARRAY of items (name, price, quantity). Write queries to ① count total items across all transactions ② find the most expensive item per transaction ③ find users who bought product X AND Y in the same transaction. How does UNNEST interact with the partition key?"},
+{day:46,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Use QUALIFY to deduplicate (keep latest per ID), find top item per group, and filter on a RANK window. Compare with equivalent subquery approach in readability and performance.",question:"What is QUALIFY in BigQuery and why doesn't standard SQL have it? Give 3 real-world use cases where QUALIFY simplifies queries that would otherwise need a subquery or CTE. Does QUALIFY affect query performance or is it purely syntax convenience?"},
+{day:47,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Write complex BQ window queries: running total by customer partitioned by year, rolling 30-day revenue with RANGE frame (not ROWS), and ratio-to-total within each product category.",question:"You need the percentage contribution of each product to its category's total revenue, partitioned by month, for last 12 months. Write the BQ query. What is the difference between ROWS and RANGE frame modes and when does RANGE give different results than ROWS?"},
+{day:48,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Train a BQML LOGISTIC_REG model to predict customer churn using a feature table. Evaluate with ML.EVALUATE. Make predictions with ML.PREDICT. Document all CREATE MODEL options used.",question:"Your team wants to predict which customers will churn next month. You have 2 years of historical data in BigQuery. How do you use BQML? What feature engineering do you do in SQL? What metrics do you look at in ML.EVALUATE, and how do you handle class imbalance (90% non-churn, 10% churn)?"},
+{day:49,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Write 5 INFORMATION_SCHEMA queries: ① expensive queries this week ② tables by storage size ③ partition metadata ④ column schema for all tables ⑤ user query history with slot usage.",question:"Your BigQuery bill doubled this month. How do you investigate? Write the INFORMATION_SCHEMA queries to find: which queries scanned the most data, which users ran them, which tables consume the most storage, and which queries are not using partition pruning."},
+{day:50,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Optimise 3 slow queries: ① one with SELECT * ② one with DATE() function on partition column ③ one with a correlated subquery. Show before/after bytes processed in INFORMATION_SCHEMA.",question:"A daily report query scans 50TB and costs $250/day. Walk through your optimisation checklist: partition pruning, column selection, clustering, materialised views, APPROX functions. Which change gives the biggest reduction? How do you prove the optimisation worked?"},
+{day:51,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Create Row Access Policies on a sales table so each regional team sees only their data. Test by querying as different users/groups. Verify with INFORMATION_SCHEMA.ROW_ACCESS_POLICIES.",question:"You have a global sales table and need different teams to see only their region's data — but they use the same queries and should not know about the filtering. How do you implement this in BigQuery? What happens if a user has multiple conflicting row access policies?"},
+{day:52,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Set up column-level security using Policy Tags in Data Catalog for PII columns (email, phone, SSN). Test that users without the masking reader role see NULL. Document the taxonomy hierarchy.",question:"Your data warehouse contains PII mixed with business data. Some analysts need business data but not PII. How do you implement column-level security in BigQuery? What is a Policy Tag taxonomy, who manages it, and what happens if someone tries SELECT * on a protected table?"},
+{day:53,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Create an Authorized View exposing only non-PII columns from a sensitive source table to an analyst group. Verify that the view service account has access to the source dataset — not the users directly.",question:"An analyst team needs access to sales data but the table also has sensitive pricing margins. How do you use an Authorized View? Why must source table and view be in DIFFERENT datasets? Walk through the exact IAM grants needed. What is the difference vs a row access policy?"},
+{day:54,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Create a Materialised View with enable_refresh=TRUE on a heavy aggregation. Verify smart rewrite happens when querying the base table. Check refresh lag and schedule options.",question:"Your dashboard queries an aggregation over a 5TB table and takes 3 minutes. A Materialised View reduces it to 2 seconds. How does BQ's smart rewrite work — how does BQ know to use the MV when a user queries the base table? What are the limitations of MVs?"},
+{day:55,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Create a Scheduled Query running daily at 5 AM, processing yesterday's data using @run_date parameter, appending to a summary table idempotently. Handle the partition logic explicitly.",question:"You need a daily scheduled query in BigQuery that aggregates yesterday's orders into a summary table. How do you make it idempotent (safe to re-run)? What is the @run_date parameter and how does it work? What happens if the scheduled query fails at 5 AM — how do you recover?"},
+{day:56,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Create an External Table over CSV files in GCS. Query it without loading data. Compare query performance vs native BQ table. Test schema auto-detection vs explicit schema.",question:"Your data lake stores raw Parquet files in GCS and your warehouse is BigQuery. When do you use External Table vs loading data into a native BQ table? What are the performance implications, cost differences, and when would a BigLake table be better than a regular external table?"},
+{day:57,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Use TABLESAMPLE to query 1% of a large table. Compare APPROX_COUNT_DISTINCT vs COUNT(DISTINCT). Test DATE_TRUNC, DATE_DIFF, FORMAT_DATE, and SAFE_DIVIDE for common errors.",question:"You're exploring a 10TB dataset for the first time to understand data distributions. How do you do this cost-effectively? What BQ-specific functions help with approximate analysis? What is the accuracy trade-off of APPROX_COUNT_DISTINCT and when is approximation NOT acceptable?"},
+{day:58,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Write a PIVOT query on monthly sales data (months as columns). Write UNPIVOT on a wide table. Use EXCEPT and REPLACE in SELECT to exclude/override specific columns.",question:"Your analytics team maintains a sales report where each month is a column (Jan–Dec). New months are added manually each year. How do you automate this with PIVOT? What is the limitation of PIVOT in BigQuery? How would you dynamically generate pivot columns without hardcoding?"},
+{day:59,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"Design a multi-tenant SaaS analytics system in BQ: partitioned, clustered, with row-level security per tenant. Write a sample dashboard query and verify performance.",question:"HARD: You're designing BQ for a SaaS platform serving 5,000 enterprise clients. Each client's data must be isolated, the table will hold 10TB, and queries must complete in under 5 seconds. Describe your complete design: partitioning, clustering, security, and query patterns."},
+{day:60,topic:"BigQuery",phase:"Phase 4 — BigQuery",task:"BQ Challenge: Write queries using GEOGRAPHY functions (ST_DISTANCE, ST_WITHIN), JSON queries (JSON_VALUE, JSON_QUERY), and ARRAY_AGG with LIMIT. Build a full analytical dashboard query.",question:"HARD: Orders table with ARRAY<STRUCT<>> for items, GEOGRAPHY for delivery location, and JSON column for metadata. Write a single BQ query that ① unnests items ② filters by delivery within 50km of a city ③ extracts a JSON metadata field ④ computes top 5 products per region using QUALIFY."},
+{day:61,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Write a DAG from scratch with 3 tasks: extract → transform → load. Use PythonOperator. Set schedule='0 6 * * *', catchup=False, retries=3, retry_delay=5min. Deploy to Composer.",question:"Explain the Airflow component architecture: Scheduler, Webserver, Executor, Workers, Metadata DB. What does the Scheduler actually do every N seconds? How does a task go from 'scheduled' to 'queued' to 'running'? What happens if the Scheduler restarts mid-run?"},
+{day:62,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Use PythonOperator to push a value via XCom (return value). Pull it in the next task using context['ti'].xcom_pull(). Then use a BashOperator with Jinja template to use the XCom value.",question:"You need to pass the row count from an extraction task to a downstream validation task. How do you use XCom? What is the size limit of XCom values, where are they stored, and why should you NOT push a pandas DataFrame through XCom? What do you do instead when you need to pass large data?"},
+{day:63,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Build a full GCP pipeline DAG: ① wait for GCS file ② run Dataproc PySpark job ③ load result to BigQuery ④ run BQ transformation SQL. Use Dataproc create → submit → delete pattern.",question:"You're building an Airflow DAG that creates a Dataproc cluster, runs a Spark job, then deletes the cluster. The Spark job occasionally fails. How do you ensure the cluster is ALWAYS deleted even if the job fails (to avoid cost)? What trigger_rule do you set on the delete task and why?"},
+{day:64,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Add a GCSObjectExistenceSensor in reschedule mode that waits up to 2 hours for a file. Configure poke_interval=5min. Test what happens when the file arrives late and when timeout is hit.",question:"What is the difference between poke mode and reschedule mode in Airflow Sensors? You have a sensor waiting up to 6 hours for a file with poke_interval=60s. If you use poke mode, what problem might you cause for your Airflow cluster? How does reschedule mode solve this?"},
+{day:65,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Implement the GCS-path XCom pattern: task 1 writes a file to GCS and pushes the path, task 2 reads the path and processes the file. Test failure recovery — does task 2 re-read the correct file?",question:"You have a 500MB DataFrame result from task A that task B needs. You can't use XCom directly. What are 3 design patterns to pass this data between tasks? What are the trade-offs of each? If task B fails and is retried, how do you ensure it reads the correct version of the data?"},
+{day:66,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Configure on_failure_callback to send a Slack alert with task name and error. Add email_on_failure=True. Implement retry_exponential_backoff. Test all 3 notification paths by intentionally failing a task.",question:"Your Airflow DAG runs at 6 AM and sends a failure alert to Slack. By 9 AM your manager asks why no one noticed the failure until now. How do you improve the alerting system? What different callback types does Airflow support and how do you set up SLA monitoring so you're alerted when a task runs too long?"},
+{day:67,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Implement an idempotent task using DELETE+INSERT (not plain INSERT). Also write a MERGE-based upsert version. Test by running the same dag_run twice for the same execution_date and verify identical results.",question:"What does idempotency mean in the context of Airflow tasks? Why is it critical for backfills and retries? Show 3 concrete examples of non-idempotent patterns (plain INSERT, reading 'today' instead of execution_date, writing to a fixed filename). How do you fix each?"},
+{day:68,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Run a backfill for 7 days using CLI: airflow dags backfill -s START -e END dag_id. Observe how max_active_runs controls concurrency. Verify all tasks are idempotent by inspecting output.",question:"Your daily DAG had a bug for 2 weeks and produced incorrect data. The bug is now fixed. How do you backfill 14 days of data safely? What is the difference between catchup=True and running a manual backfill? How do you control how many days run concurrently and what must be true about your tasks?"},
+{day:69,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Write a Dynamic DAG that generates one DAG per table from a config list. Each DAG: sensor → extract → transform → load tasks. Register all DAGs using globals().",question:"You manage 50 data sources, each with the same pipeline structure but different source configs. How do you avoid writing 50 almost-identical DAG files? Describe 3 approaches to dynamic DAG generation. What are the Airflow Scheduler performance implications of many DAGs and how do you mitigate this?"},
+{day:70,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Write a custom SlackNotificationOperator extending BaseOperator. Implement execute(), use a Hook for the Slack connection, accept channel and message params, and log the result.",question:"When would you write a Custom Operator vs using a PythonOperator with a function? What are the benefits in terms of reusability, testing, and code organisation? Walk through the minimum implementation of a custom operator — what methods must you override and what does the execute() context provide?"},
+{day:71,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Implement a BranchPythonOperator routing to different tasks based on day of week (weekday vs weekend). Use trigger_rule='none_failed_or_skipped' correctly on merge task.",question:"You have a pipeline that runs differently on weekdays (full processing) vs weekends (summary only). How do you implement this branching in Airflow? What trigger_rule must you set on the task that comes AFTER the branch merges, and why does the default trigger_rule break in this pattern?"},
+{day:72,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Rewrite a traditional Operator-based DAG using the @task (TaskFlow API) decorator. Compare readability. Use @task.branch for conditional logic. Pass XComs as regular Python function args.",question:"What is the TaskFlow API in Airflow 2.x and how does it improve developer experience? Compare writing the same pipeline with PythonOperator+XCom vs @task decorator. What does it handle automatically? What are its current limitations compared to traditional operators?"},
+{day:73,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Set SLA=timedelta(hours=2) on critical tasks. Set up sla_miss_callback. Create a Gantt chart view in the Airflow UI. Write a query against the Airflow metadata DB to find slowest tasks.",question:"Your data pipeline must complete by 8 AM for the business to open. How do you implement SLA monitoring in Airflow? What is the difference between SLA (expected completion time) and task timeout? If a task's SLA is missed, what exactly triggers and what are your response options?"},
+{day:74,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Compare LocalExecutor vs CeleryExecutor vs KubernetesExecutor. Configure a CeleryExecutor with Redis broker. Understand how task queues work and how to assign tasks to specific queues.",question:"Your Airflow deployment uses LocalExecutor and can only run 4 concurrent tasks. You need to scale to 50 concurrent tasks. Compare CeleryExecutor and KubernetesExecutor — which do you choose if you have ① consistent baseline workload ② very spiky/unpredictable workload? What infrastructure does each require?"},
+{day:75,topic:"Airflow",phase:"Phase 5 — Airflow",task:"Build a complete production DAG: GCS sensor → Dataproc cluster create → PySpark job → delete cluster → BQ load → BQ transform → data quality check → Slack notification. Handle all failure modes.",question:"HARD: Design a production Airflow pipeline ingesting 50 daily source files from GCS, processing each with Dataproc, loading to BigQuery, running data quality checks, and sending a summary report. Files arrive unpredictably between midnight and 6 AM. How do you handle: ① late/missing files ② partial failures ③ cost control ④ monitoring ⑤ backfills?"},
+{day:76,topic:"Modeling",phase:"Phase 6 — Modeling",task:"Design a star schema for e-commerce: fact_orders at order-line grain. Create 5 dimension tables (dim_customer, dim_product, dim_date, dim_store, dim_promo). Define all FKs and granularity.",question:"You're designing a data warehouse for e-commerce. CEO wants to analyse sales by customer, product, geography, time, and promotion simultaneously. What is the grain of your fact table, what dimensions do you create, and how do you handle a product belonging to multiple categories?"},
+{day:77,topic:"Modeling",phase:"Phase 6 — Modeling",task:"Convert your star schema to snowflake by normalising dim_product into dim_product + dim_category + dim_brand. Document trade-offs. Write join queries for both and compare.",question:"Your data warehouse uses star schema. A new engineer suggests normalising dim_product to save 5GB storage. The fact table is 50TB. Would you normalise it? What are the query performance implications and what type of workload would make snowflake schema the correct choice?"},
+{day:78,topic:"Modeling",phase:"Phase 6 — Modeling",task:"Implement complete SCD Type 2 pipeline: source → delta detection → close old record → insert new record → surrogate key generation. Use MERGE. Test with 3 consecutive changes to the same customer.",question:"You're implementing SCD Type 2 for a customer dimension. A customer changes email on Day 1, address on Day 5, loyalty tier on Day 10. Walk through exactly what rows exist in dim_customer after each change. How does a fact table join correctly show the right version for an order placed on Day 3?"},
+{day:79,topic:"Modeling",phase:"Phase 6 — Modeling",task:"Build a timestamp-based CDC pipeline: detect changes (INSERT/UPDATE/DELETE) from source, apply to target using MERGE. Test with 100 source changes and verify target has exact same state.",question:"You need to sync changes from a Postgres OLTP database (1M writes/day) to BigQuery. Compare 3 CDC approaches: ① full table extract daily ② timestamp-based incremental ③ log-based CDC (Debezium). Which handles DELETEs correctly? What is your recommendation for this scale?"},
+{day:80,topic:"Modeling",phase:"Phase 6 — Modeling",task:"Design a Medallion architecture for a fintech company: Bronze (raw), Silver (cleansed, deduped, joined), Gold (daily aggregations, fraud features). Define retention, format, and access per layer.",question:"How do you implement the Medallion architecture on GCS + BigQuery + Dataproc? What format do you use in each layer, what transformations happen at each, and how do you handle a bug discovered in Silver that affects 3 months of Gold data? What is the recovery strategy?"},
+{day:81,topic:"Modeling",phase:"Phase 6 — Modeling",task:"For a 10TB fact table with 5 common query patterns, design the optimal partition + cluster strategy. Justify each choice. Write the CREATE TABLE statement and 5 queries using the full pruning benefit.",question:"Your fact_orders table query patterns: ① filter by order_date (95%) ② filter by region (70%) ③ JOIN on customer_id (60%) ④ GROUP BY product_id (40%). Design the partition and cluster keys. What is the max number of clustering columns? How do you decide their order?"},
+{day:82,topic:"Modeling",phase:"Phase 6 — Modeling",task:"Full modeling challenge: design a data model for a ride-sharing company. Include: trip facts, driver/rider dimensions, SCD Type 2 for driver_status, CDC for ratings, ARRAY<STRUCT> for route waypoints.",question:"HARD: A streaming platform wants to track: what each user watched (fact), when they subscribed/cancelled (SCD Type 2), their viewing preferences over time, and trending content. Design the complete dimensional model. What are the fact table grain options and query trade-offs of each grain choice?"},
+{day:83,topic:"Design",phase:"Phase 7 — System Design",task:"Design a batch pipeline ingesting 1TB daily sales data: source → GCS(raw) → Dataproc(transform) → BigQuery(warehouse). Include scheduling (Airflow), partitioning, error handling, monitoring.",question:"Design a batch data pipeline processing 1TB daily from an on-prem Oracle DB to BigQuery. Data must be available by 8 AM. Walk through: ingestion method, transformation layer, storage format, loading strategy, scheduling, failure recovery, and end-to-end monitoring."},
+{day:84,topic:"Design",phase:"Phase 7 — System Design",task:"Design a real-time fraud detection pipeline: events → Kafka → Spark Streaming → feature computation → ML model → Firestore alert. Define latency SLA, fault tolerance, and backpressure handling.",question:"Design a real-time fraud detection system for a payment processor handling 50,000 transactions/second. Latency requirement: flag within 200ms. Walk through: message broker choice, stream processor, feature store, model serving, and what happens when volume spikes 10x during Black Friday."},
+{day:85,topic:"Design",phase:"Phase 7 — System Design",task:"Design a Lakehouse for a company with 10 data sources: batch (3 DB sources) + streaming (Kafka clickstream) + files (S3 CSVs). Use GCS + Delta Lake + BigQuery. Draw the full architecture.",question:"Your company wants to move from a traditional data warehouse to a Lakehouse. The current warehouse has complex SQL transformations, 50+ data sources, and 200 BI dashboards. How do you design the new Lakehouse? What format do you use, how do you migrate without breaking dashboards, and what new capabilities does it unlock?"},
+{day:86,topic:"Design",phase:"Phase 7 — System Design",task:"Design a data quality framework: implement Great Expectations checks on a DataFrame (null %, schema, value ranges, referential integrity). Integrate checks into an Airflow DAG as a gate.",question:"You discover 5% of customer_id values in your fact table have no matching record in dim_customer — a referential integrity violation running for 3 months undetected. How do you build a data quality framework to prevent this going forward? What checks do you implement, where in the pipeline, and what is the failure action?"},
+{day:87,topic:"Design",phase:"Phase 7 — System Design",task:"Design a monitoring stack for a data platform: define metrics (pipeline latency, row counts, error rates, cost), set up alerts, and create a runbook for the top 3 most common failure modes.",question:"Your data platform processes 100 pipelines daily. How do you monitor all of them? What key metrics do you track (not just job status), how do you detect silent failures (job succeeded but data is wrong), and what is your on-call runbook when ① a pipeline hasn't run in 24h ② row count dropped 80% ③ BigQuery cost spiked 5x?"},
+{day:88,topic:"Design",phase:"Phase 7 — System Design",task:"Design a scalable API ingestion system: REST API with cursor pagination, rate-limited to 500 req/min, 99.5% uptime. Handle: backpressure, checkpointing, schema changes, retries.",question:"Design a system to ingest data from 20 different vendor APIs (each with different schemas, auth methods, and rate limits) into your data lake. How do you build this generically? What is your checkpointing strategy? How do you handle schema changes without breaking downstream consumers?"},
+{day:89,topic:"Design",phase:"Phase 7 — System Design",task:"Full data platform design: given 5 data sources, 100M events/day, 50 analysts, 3 ML engineers, 2 hour SLA — design the complete architecture with all components, costs, and trade-offs.",question:"HARD: Design a complete data platform for a mid-size company. Requirements: ① 10 source systems ② 5M events/day batch + 500K streaming ③ 100 analysts using BI ④ ML team training weekly models ⑤ data fresh within 2 hours. Choose your tech stack, justify each component, estimate rough costs, and identify the top 3 risks."},
+{day:90,topic:"Design",phase:"Phase 7 — System Design",task:"FINAL DAY: Full mock interview. Answer 3 questions timed (15 min each): ① PySpark skew problem ② BigQuery schema design ③ Airflow pipeline with failure handling. Record yourself and review.",question:"GRAND FINALE — All Topics: A startup data team is 2 engineers. They have raw data in GCS (CSV), need real-time dashboards, ML models weekly, and must stay under $5K/month on GCP. Design their ENTIRE data platform. Justify EVERY technology choice. What do you build first, what shortcuts are acceptable early-stage, and what changes at 10x scale?"}
+];
+
+const TOPICS=["All","SQL","Python","PySpark","BigQuery","Airflow","Modeling","Design"];
+const TCOLORS={SQL:"#185FA5",Python:"#BA7517",PySpark:"#0F6E56",BigQuery:"#378ADD",Airflow:"#A32D2D",Modeling:"#534AB7",Design:"#3B6D11"};
+const TLIGHTS={SQL:"#E6F1FB",Python:"#FAEEDA",PySpark:"#E1F5EE",BigQuery:"#E6F1FB",Airflow:"#FCEBEB",Modeling:"#EEEDFE",Design:"#EAF3DE"};
+
+const STORAGE_KEY="de_challenge_progress_v1";
+
+function loadProgress(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+    return new Set(saved);
+  }catch(e){
+    return new Set();
+  }
+}
+
+function saveProgress(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify([...done]));
+}
+
+let done=loadProgress();
+let filter="All";
+let sel=null;
+
+function getTopic(t){return t||"SQL";}
+function bg(t){return TCOLORS[getTopic(t)]||"#185FA5";}
+function lt(t){return TLIGHTS[getTopic(t)]||"#E6F1FB";}
+
+function renderStats(){
+  const p=Math.round(done.size/90*100);
+  document.getElementById("pbar").style.width=p+"%";
+  document.getElementById("pct-lbl").textContent=done.size+" of 90 days completed · "+p+"% done";
+  const rows=TOPICS.filter(t=>t!=="All").map(t=>{
+    const total=DAYS.filter(d=>d.topic===t).length;
+    const c=DAYS.filter(d=>d.topic===t&&done.has(d.day)).length;
+    return`<div class="stat"><div class="stat-val" style="color:${TCOLORS[t]}">${c}/${total}</div><div class="stat-lbl">${t}</div></div>`;
+  }).join("");
+  document.getElementById("stats-area").innerHTML=rows;
+}
+
+function renderFilters(){
+  const html=TOPICS.map(t=>{
+    const ac=filter===t;
+    const col=t==="All"?"#1e293b":TCOLORS[t];
+    return`<button class="fbtn${ac?" active":""}" style="${ac?`background:${col};`:"background:var(--color-background-primary);"}" onclick="setFilter('${t}')">${t}</button>`;
+  }).join("");
+  document.getElementById("filters-area").innerHTML=html;
+}
+
+function renderDetail(){
+  const el=document.getElementById("detail-area");
+  if(!sel){el.innerHTML="";return;}
+  const d=sel;
+  const c=bg(d.topic);
+  const isDone=done.has(d.day);
+  el.innerHTML=`<div class="detail">
+    <div class="dtop" style="background:${c}"></div>
+    <div class="dbody">
+      <div class="dhead">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:22px;font-weight:500">Day ${d.day}</span>
+            <span style="font-size:12px;font-weight:500;padding:3px 12px;border-radius:99px;background:${lt(d.topic)};color:${c}">${d.topic}</span>
+          </div>
+          <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:3px">${d.phase}</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="toggleDone(${d.day})" style="padding:7px 14px;border-radius:var(--border-radius-md);border:0.5px solid ${isDone?'#16a34a':'var(--color-border-secondary)'};background:${isDone?'#16a34a':'var(--color-background-primary)'};color:${isDone?'#fff':'var(--color-text-primary)'};cursor:pointer;font-size:13px;font-family:var(--font-sans)">${isDone?'✓ Completed':'Mark as done'}</button>
+          <button class="dclose" onclick="closeDet()">✕</button>
+        </div>
+      </div>
+      <div class="dbox"><div class="dlabel">DAILY TASK — BUILD THIS TODAY</div><div class="dtext">${d.task}</div></div>
+      <div class="dq"><div class="dlabel" style="color:#854d0e">INTERVIEW QUESTION — ANSWER THIS</div><div class="dqtext">${d.question}</div></div>
+      <div class="dnav">
+        <button class="dnbtn" onclick="navDay(-1)" ${d.day===1?"disabled":""}>← Day ${d.day-1}</button>
+        <span style="font-size:12px;color:var(--color-text-tertiary);align-self:center">${d.day} of 90</span>
+        <button class="dnbtn" onclick="navDay(1)" ${d.day===90?"disabled":""}>Day ${d.day+1} →</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderGrid(){
+  const filtered=DAYS.filter(d=>filter==="All"||d.topic===filter);
+  const html=filtered.map(d=>{
+    const c=bg(d.topic);
+    const isDone=done.has(d.day);
+    const isSel=sel&&sel.day===d.day;
+    return`<div class="card${isDone?" done":""}" onclick="selectDay(${d.day})" style="${isSel?`border-color:${c};box-shadow:0 0 0 2px ${c}33`:``}">
+      <div class="ctop" style="background:${c}"></div>
+      <div class="cbody">
+        <div class="chead">
+          <div style="display:flex;align-items:center;gap:6px">
+            <div class="cday" style="background:${lt(d.topic)};color:${c}">${d.day}</div>
+            <span class="ctag" style="background:${lt(d.topic)};color:${c}">${d.topic}</span>
+          </div>
+          <button class="cbtn${isDone?" done-mark":""}" onclick="event.stopPropagation();toggleDone(${d.day})">${isDone?"✓":""}</button>
+        </div>
+        <div class="ctask">${d.task}</div>
+        <div class="cq">${d.question}</div>
+        <div class="phase-lbl">${d.phase}</div>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("grid-area").innerHTML=html||`<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-tertiary)">No days found for this filter.</div>`;
+}
+
+function render(){renderStats();renderFilters();renderDetail();renderGrid();}
+
+window.setFilter=function(t){filter=t;render();};
+window.selectDay=function(d){sel=DAYS.find(x=>x.day===d)||null;render();document.getElementById("detail-area").scrollIntoView({behavior:"smooth",block:"nearest"});};
+window.closeDet=function(){sel=null;render();};
+window.toggleDone=function(d){
+  done.has(d)?done.delete(d):done.add(d);
+  saveProgress();
+  render();
+};
+window.navDay=function(dir){if(!sel)return;const idx=DAYS.findIndex(x=>x.day===sel.day);const next=DAYS[idx+dir];if(next)sel=next;render();};
+
+render();
+</script>
