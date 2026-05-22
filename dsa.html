@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>50 DSA Questions — Data Engineering & Analytics</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #0b1120;
+      color: #e2e8f0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      padding: 24px;
+    }
+    #app {
+      max-width: 1600px;
+      margin: auto;
+    }
+    .hdr {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    .hdr-layout {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .pbar-bg {
+      height: 12px;
+      background: #1e293b;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .pbar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, #22c55e);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    .stats-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 10px 14px;
+      min-width: 90px;
+      text-align: center;
+    }
+    .stat-v {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .stat-lbl {
+      color: #94a3b8;
+      font-size: 11px;
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .filters {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 16px;
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .fbtn, .toggle-pill, .dnbtn, .dclose {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .fbtn:hover, .toggle-pill:hover, .dnbtn:hover {
+      background: #2d3d52;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .fbtn.on, .toggle-pill.active {
+      color: white !important;
+      border-color: transparent !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .sep {
+      width: 1px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 0 4px;
+    }
+    .controls-row {
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .search-box {
+      background: #020617;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 14px;
+      flex-grow: 1;
+      min-width: 240px;
+    }
+    .search-box:focus {
+      outline: none;
+      border-color: #38bdf8;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 22px;
+    }
+    .card {
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 30px rgba(0,0,0,0.35);
+      border-color: rgba(56,189,248,0.35);
+    }
+    .card.solved {
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+    .card.sel {
+      box-shadow: 0 0 0 2px currentColor;
+    }
+    .ctop, .dtop {
+      height: 6px;
+      width: 100%;
+    }
+    .cb {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .crow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .cnum {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .dbadge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .dbadge.E { background: #d1fae5; color: #065f46; }
+    .dbadge.M { background: #fef3c7; color: #92400e; }
+    .dbadge.H { background: #fee2e2; color: #991b1b; }
+    
+    .cbtn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .cbtn:hover {
+      background: #2d3d52;
+      color: white;
+    }
+    .cbtn.done-btn {
+      background: #22c55e;
+      color: white;
+      border-color: transparent;
+    }
+    .ctitle {
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 8px;
+    }
+    .ctopic {
+      display: inline-block;
+      align-self: flex-start;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+    .cdesc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #94a3b8;
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+    .cpat {
+      font-size: 12px;
+      font-weight: 500;
+      color: #38bdf8;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 12px;
+    }
+    
+    /* Detail View Styling */
+    .det {
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      margin-bottom: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .dbd {
+      padding: 24px;
+    }
+    .dhead {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .co-tag {
+      background: rgba(255,255,255,0.06);
+      color: #cbd5e1;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .dbox, .hint-box, .why-box {
+      padding: 16px;
+      border-radius: 16px;
+      margin-bottom: 16px;
+    }
+    .dbox { background: #0f172a; border: 1px solid rgba(255,255,255,0.04); }
+    .hint-box { background: rgba(234, 179, 8, 0.06); border: 1px solid rgba(234, 179, 8, 0.15); }
+    .why-box { background: rgba(34, 197, 94, 0.06); border: 1px solid rgba(34, 197, 94, 0.15); }
+    .dlbl {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+    .dtext {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #e2e8f0;
+    }
+    .dnav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="hdr">
+    <div class="hdr-layout">
+      <div>
+        <div style="font-size: 30px; font-weight: 800; letter-spacing: -0.5px; color: #ffffff">50 DSA Questions — Data Engineering & Analytics</div>
+        <div style="font-size: 13px; color: #94a3b8; margin-top: 4px">Most asked in DE/DA interviews at Google · Amazon · Meta · Microsoft · Databricks</div>
+      </div>
+      <div id="st-area" class="stats-row"></div>
+    </div>
+    <div class="pbar-bg"><div class="pbar-fill" id="pbar" style="width: 0%"></div></div>
+    <div style="font-size: 12px; color: #94a3b8; font-weight: 500;" id="plbl">0 of 50 solved</div>
+  </div>
+
+  <div class="filters" id="farea"></div>
+
+  <div class="controls-row">
+    <input id="searchInput" class="search-box" placeholder="Search questions, topics, patterns..." />
+    <button id="showSolvedBtn" class="toggle-pill">Show Solved Only</button>
+    <button id="resetProgressBtn" class="toggle-pill" style="color: #ef4444; border-color: rgba(239,68,68,0.2)">Reset Progress</button>
+  </div>
+
+  <div id="det-area"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const TOPICS = ["Array", "String", "HashMap", "Sorting", "LinkedList", "Tree", "DynamicProg", "Graph"];
+const TC = { Array: "#185FA5", String: "#BA7517", HashMap: "#0F6E56", Sorting: "#7C3AED", LinkedList: "#0E7490", Tree: "#B45309", DynamicProg: "#9D174D", Graph: "#065F46" };
+const TL = { Array: "#EFF6FF", String: "#FFFBEB", HashMap: "#ECFDF5", Sorting: "#EDE9FE", LinkedList: "#E0F2FE", Tree: "#FEF3C7", DynamicProg: "#FDF2F8", Graph: "#ECFDF5" };
+
+const QS = [
+  // ── ARRAY (8) ──────────────────────────────────────────────
+  { id: 1, title: "Two Sum", diff: "E", topic: "Array", companies: "Amazon · Google · Meta", desc: "Given an array of integers and a target, return indices of two numbers that add up to the target.", pattern: "HashMap — store seen values, check complement in O(1)", hint: "For each number x, check if (target - x) exists in your HashMap. Store {value: index} as you iterate. One pass O(n).", why: "Core lookup pattern. In DE interviews you'll write similar logic for: matching keys across two datasets, finding records with sum conditions in ETL pipelines, and JOIN simulations." },
+  { id: 2, title: "Maximum Subarray (Kadane's)", diff: "M", topic: "Array", companies: "Amazon · Microsoft", desc: "Find the contiguous subarray (at least one element) which has the largest sum and return its sum.", pattern: "Dynamic Programming — Kadane's: track current_sum and max_sum", hint: "At each element decide: extend the previous subarray or start fresh. current_sum = max(num, current_sum + num). Update max_sum at every step.", why: "Sliding window / running max pattern appears constantly in data pipelines — finding the best performing time window, peak revenue period, or maximum consecutive days above threshold." },
+  { id: 3, title: "Product of Array Except Self", diff: "M", topic: "Array", companies: "Amazon · Google", desc: "Return an array where output[i] is the product of all elements except nums[i]. Cannot use division. Must be O(n).", pattern: "Prefix/Suffix products — two passes without division", hint: "First pass: prefix[i] = product of all elements to the LEFT of i. Second pass: multiply by suffix (product of all elements to the RIGHT). No division needed.", why: "Two-pass prefix/suffix pattern maps directly to running totals, cumulative metrics, and percentage-of-total calculations you build in SQL/PySpark — understanding WHY this works helps you design better aggregation pipelines." },
+  { id: 4, title: "Merge Intervals", diff: "M", topic: "Array", companies: "Google · Facebook · Amazon", desc: "Given a list of intervals, merge all overlapping intervals and return the result.", pattern: "Sort + Greedy — sort by start, compare end of last merged with start of next", hint: "Sort by interval start. Maintain a result list. If current interval overlaps last in result (start ≤ last.end), extend last.end. Otherwise append.", why: "CRITICAL for DE. You constantly merge time windows: session stitching, overlapping event deduplication, SLA window calculations. This pattern appears directly in PySpark window functions and SQL RANGE frames." },
+  { id: 5, title: "Best Time to Buy and Sell Stock", diff: "E", topic: "Array", companies: "Amazon · Goldman Sachs", desc: "Given prices array where prices[i] is the stock price on day i, find the maximum profit from a single buy+sell.", pattern: "Greedy / Sliding window — track minimum so far and max profit", hint: "Track min_price seen so far. At each price, calculate profit = price - min_price. Update max_profit. O(n) single pass.", why: "Classic time-series max/min pattern. In data analytics you regularly find 'best period', 'peak vs trough', and 'maximum delta' metrics from time-stamped data — same greedy logic applies." },
+  { id: 6, title: "Top K Frequent Elements", diff: "M", topic: "Array", companies: "Amazon · Facebook · Uber", desc: "Given an integer array, return the k most frequent elements in any order.", pattern: "HashMap + Min-Heap (or Bucket Sort) — count frequencies, extract top k", hint: "Count frequencies with a HashMap. Use a min-heap of size k — push each element, pop when size exceeds k. Or use bucket sort: index = frequency, O(n).", why: "EXTREMELY common in analytics: top K products, top K customers, top K error codes. You'll write this pattern every week as a data engineer. Understanding heap vs sort trade-offs is essential for performance." },
+  { id: 7, title: "Find Missing Number", diff: "E", topic: "Array", companies: "Microsoft · Amazon", desc: "Given array of n distinct numbers in range [0,n], find the one missing number.", pattern: "Math (Gauss formula) or XOR — O(1) space", hint: "Expected sum = n*(n+1)/2. Subtract actual sum. Or XOR all indices 0..n with all array values — missing number remains.", why: "Data validation pattern — detecting gaps, missing IDs, or sequence breaks in ingested data. You'll implement this logic when validating completeness of daily partitions or checking for missing invoice IDs." },
+  { id: 8, title: "Subarray Sum Equals K", diff: "M", topic: "Array", companies: "Facebook · Google · Amazon", desc: "Given an array of integers and a target k, find the total number of continuous subarrays whose sum equals k.", pattern: "Prefix Sum + HashMap — O(n) time O(n) space", hint: "Maintain running prefix_sum. At each step check if (prefix_sum - k) exists in your HashMap — that means a subarray summing to k ends here. Store frequency of each prefix_sum.", why: "Running total + target lookup is the core of: finding time windows with a specific total, sessions with a target event count, and batch boundary detection — all common DE patterns." },
+
+  // ── STRING (7) ─────────────────────────────────────────────
+  { id: 9, title: "Valid Anagram", diff: "E", topic: "String", companies: "Amazon · Microsoft", desc: "Given two strings s and t, return true if t is an anagram of s (same characters, same frequencies).", pattern: "HashMap — count character frequencies and compare", hint: "Count character frequencies of s in a HashMap. Decrement for each character in t. Return true if all counts are zero. Or sort both strings and compare.", why: "Character/value frequency comparison is the basis for: data deduplication logic, detecting schema drift (same columns different order), and fuzzy matching in ETL pipelines." },
+  { id: 10, title: "Longest Substring Without Repeating Chars", diff: "M", topic: "String", companies: "Amazon · Google · Bloomberg", desc: "Find the length of the longest substring without repeating characters.", pattern: "Sliding Window + HashSet — expand right, shrink left on duplicate", hint: "Use two pointers (left, right) and a set. Expand right until duplicate found, then shrink from left until duplicate removed. Track max window size.", why: "Sliding window is THE fundamental pattern for: sessionizing streaming events, finding longest valid data windows, detecting longest clean data streak without anomalies." },
+  { id: 11, title: "Group Anagrams", diff: "M", topic: "String", companies: "Amazon · Facebook", desc: "Given an array of strings, group the anagrams together. Return a list of groups.", pattern: "HashMap with sorted string as key — O(n × k log k)", hint: "Sort each string alphabetically — this becomes the canonical key. Group strings by their sorted version in a HashMap. 'eat','tea','ate' all sort to 'aet'.", why: "Canonical key grouping is fundamental in DE — hashing/normalising data to find equivalent records. Same logic for: canonicalising addresses, grouping similar product names, deduplication by normalised key." },
+  { id: 12, title: "Valid Parentheses", diff: "E", topic: "String", companies: "Amazon · Google · Facebook", desc: "Given a string containing '(', ')', '{', '}', '[', ']', determine if the input is valid (properly opened and closed).", pattern: "Stack — push open brackets, match and pop on close brackets", hint: "Push opening brackets on stack. When you see a closing bracket, check if stack top is the matching opener. If not, or stack empty — return false. Valid if stack is empty at end.", why: "Stack-based parsing is used in: SQL query parsing, validating pipeline config files (JSON/YAML), expression evaluation in transformation logic, and nested data structure validation." },
+  { id: 13, title: "Minimum Window Substring", diff: "H", topic: "String", companies: "Google · Facebook · Twitter", desc: "Given strings s and t, find the minimum window substring of s that contains all characters of t.", pattern: "Sliding Window + HashMap — two pointer with frequency counts", hint: "Expand right until all t characters covered. Then shrink from left to minimise window while maintaining coverage. Track 'formed' count vs 'required' count.", why: "Hard but important — the 'find smallest window containing all required elements' pattern maps to: finding the smallest time window containing all required event types, minimum batch containing all required records." },
+  { id: 14, title: "Longest Palindromic Substring", diff: "M", topic: "String", companies: "Amazon · Microsoft", desc: "Given a string s, find the longest palindromic substring.", pattern: "Expand Around Center — O(n²) | DP table — O(n²) time & space", hint: "For each character (and each pair), expand outward while characters match. Track longest expansion found. Two cases: odd length (single centre) and even length (pair centre).", why: "Palindrome expansion logic teaches the 'grow from centre' pattern used in: sliding time window expansion, concentric data aggregation, and building expanding lookback windows in time series." },
+  { id: 15, title: "Find All Anagrams in String", diff: "M", topic: "String", companies: "Facebook · Amazon", desc: "Given strings s and p, find all start indices of p's anagrams in s.", pattern: "Sliding Window + HashMap — fixed-size window with frequency comparison", hint: "Maintain a fixed window of size len(p). Use frequency maps for window and p. When maps match, record the start index. Slide window by adding right char and removing left char.", why: "Fixed-size sliding window on character frequencies is directly analogous to: event pattern detection in streams, finding time windows matching a required event distribution, and sessionisation." },
+
+  // ── HASHMAP (5) ────────────────────────────────────────────
+  { id: 16, title: "Longest Consecutive Sequence", diff: "M", topic: "HashMap", companies: "Google · Facebook", desc: "Given an unsorted array, find the length of the longest consecutive elements sequence. Must be O(n).", pattern: "HashSet — O(1) lookup to check sequence continuity", hint: "Put all numbers in a HashSet. For each number, only start counting if (num-1) is NOT in the set (it's a sequence start). Count upward while (num+1) exists in set.", why: "Consecutive sequence / gap detection is constant in DE: finding longest streak of daily active users, detecting gaps in invoice sequences, finding the longest uninterrupted data ingestion period." },
+  { id: 17, title: "First Unique Character in String", diff: "E", topic: "HashMap", companies: "Amazon · Microsoft", desc: "Given a string, find the first non-repeating character and return its index. Return -1 if none exists.", pattern: "HashMap — two pass: count frequencies, then find first with count 1", hint: "First pass: count frequency of each character. Second pass: return index of first character with frequency == 1.", why: "First unique / first occurrence pattern is used in deduplication, finding first anomaly in a time series, and locating the first record that breaks a data quality rule." },
+  { id: 18, title: "Intersection of Two Arrays II", diff: "E", topic: "HashMap", companies: "Amazon · Microsoft", desc: "Given two arrays, return their intersection including duplicates (element appears in result as many times as it appears in both arrays).", pattern: "HashMap — count frequencies of first array, decrement for second", hint: "Count frequency of each element in nums1 using HashMap. For each element in nums2, if count > 0, add to result and decrement count.", why: "Dataset intersection / common element extraction is a JOIN simulation. In DE you use this logic for: finding records that appear in both source and destination (validation), matching datasets by key for reconciliation." },
+  { id: 19, title: "Two Sum II – Sorted Input", diff: "E", topic: "HashMap", companies: "Amazon", desc: "Given a 1-indexed sorted array and target, find two numbers that add to target. Return their 1-indexed positions.", pattern: "Two Pointers — left and right converge", hint: "Set left=0, right=len-1. If sum < target move left right. If sum > target move right left. If sum == target return indices. O(n) time O(1) space.", why: "Two-pointer technique on sorted data is the basis for efficient range-based lookups and merging sorted datasets — core to merge-sort based joins in Spark's sort-merge join strategy." },
+  { id: 20, title: "Top K Frequent Words", diff: "M", topic: "HashMap", companies: "Amazon · Google", desc: "Given a list of words and integer k, return the k most frequent words sorted by frequency (ties broken alphabetically).", pattern: "HashMap + Min-Heap with custom comparator", hint: "Count word frequencies. Use a min-heap of size k with a custom comparator: primary sort by frequency (ascending), secondary by word (descending). Final result reversed.", why: "Frequency ranking with tie-breaking is common in analytics: top products by sales with alphabetical tiebreak, most active users with consistent ordering — understanding custom sort/heap comparators is essential." },
+
+  // ── SORTING & SEARCHING (6) ────────────────────────────────
+  { id: 21, title: "Binary Search", diff: "E", topic: "Sorting", companies: "Google · Amazon · All", desc: "Given a sorted array and target, return the index of target. Return -1 if not found. Achieve O(log n).", pattern: "Divide & Conquer — split search space in half each iteration", hint: "Set low=0, high=len-1. While low<=high: mid=(low+high)//2. If nums[mid]==target return mid. If nums[mid]<target set low=mid+1 else high=mid-1.", why: "Binary search fundamentals explain how: database indexes work, BigQuery uses sorted blocks in Capacitor format, Spark's sort-based joins and range partitioning enable efficient lookups." },
+  { id: 22, title: "Search in Rotated Sorted Array", diff: "M", topic: "Sorting", companies: "Amazon · Google · Meta", desc: "Search for a target in a sorted array that has been rotated at an unknown pivot. Return index or -1.", pattern: "Modified Binary Search — determine which half is sorted", hint: "At each mid: check if left half is sorted (nums[low] <= nums[mid]). If target is in that range, search left. Else search right. Same logic for right half.", why: "Variant binary search teaches how to handle partially ordered data — relevant to understanding how range partitioning and partition pruning work on partially sorted data in BigQuery and Spark." },
+  { id: 23, title: "Kth Largest Element in Array", diff: "M", topic: "Sorting", companies: "Facebook · Amazon · Microsoft", desc: "Find the kth largest element in an unsorted array. Must not sort the full array.", pattern: "Min-Heap of size k — O(n log k) | QuickSelect — O(n) average", hint: "Min-Heap approach: maintain heap of size k. If current > heap min, pop min and push current. Final heap top is kth largest. QuickSelect: partition around pivot, recurse on correct side.", why: "Top-K selection is one of the most common analytics operations: top K customers, top K products, p95 latency. Understanding heap-based vs sort-based approaches helps when choosing between APPROX and exact functions in BigQuery." },
+  { id: 24, title: "Sort Colors (Dutch National Flag)", diff: "M", topic: "Sorting", companies: "Microsoft · Amazon", desc: "Given array with values 0, 1, 2, sort in-place so all 0s come first, then 1s, then 2s. One pass, O(1) space.", pattern: "Three Pointers — low, mid, high partitioning", hint: "Maintain three pointers: low (0 boundary), mid (current), high (2 boundary). If nums[mid]==0 swap with low, advance both. If 2 swap with high, decrement high. If 1 just advance mid.", why: "Three-way partitioning is the basis for Spark's sort-based partitioning. Understanding how to efficiently partition data into groups without full sort is key to designing efficient shuffle strategies." },
+  { id: 25, title: "Find Duplicate Number", diff: "M", topic: "Sorting", companies: "Amazon · Microsoft", desc: "Given array of n+1 integers where each is in [1,n], find the one duplicate. O(1) space, read-only array.", pattern: "Floyd's Cycle Detection — treat array as linked list", hint: "Treat value as pointer to next index. There's a cycle because of the duplicate. Use slow/fast pointers to find cycle entry point (the duplicate).", why: "Cycle detection with Floyd's algorithm appears in: detecting circular dependencies in pipeline DAGs, finding loops in data lineage graphs, and cycle detection in Airflow task dependency validation." },
+  { id: 26, title: "Merge Sort Implementation", diff: "M", topic: "Sorting", companies: "Google · Amazon", desc: "Implement merge sort from scratch. Sort array in O(n log n) time. Explain the divide-and-conquer approach.", pattern: "Divide & Conquer + Two-pointer merge", hint: "Recursively split array in half until size 1. Merge two sorted halves: use two pointers on each half, always pick the smaller element. Merge cost is O(n), recursion depth is O(log n).", why: "Merge sort IS Spark's sort-merge join. Understanding merge sort helps you understand: why sort-merge join requires data to be sorted by join key, how the merge step works across partitions, and what 'sort phase' means in shuffle output." },
+
+  // ── LINKED LIST (4) ────────────────────────────────────────
+  { id: 27, title: "Reverse a Linked List", diff: "E", topic: "LinkedList", companies: "Amazon · Microsoft · Google", desc: "Reverse a singly linked list iteratively and recursively. Return the new head.", pattern: "Three Pointers (iterative) — prev, curr, next", hint: "Iterative: prev=None, curr=head. While curr: save next=curr.next, set curr.next=prev, move prev=curr, curr=next. Return prev.", why: "Pointer manipulation fundamentals. In DE, this builds the mental model for: data transformation pipelines (reversing processing order), understanding doubly-linked list structure used in LRU cache." },
+  { id: 28, title: "Detect Cycle in Linked List", diff: "E", topic: "LinkedList", companies: "Amazon · Microsoft", desc: "Given head of a linked list, determine if it has a cycle. Return true if there is a cycle.", pattern: "Floyd's Slow & Fast Pointers — if they meet, there's a cycle", hint: "slow moves 1 step, fast moves 2 steps. If they ever point to same node → cycle exists. If fast reaches null → no cycle. O(n) time O(1) space.", why: "Cycle detection is crucial for: validating Airflow DAG has no circular dependencies, detecting infinite loops in pipeline processing, validating graph-based data models have no cycles." },
+  { id: 29, title: "Merge Two Sorted Lists", diff: "E", topic: "LinkedList", companies: "Amazon · Google · Microsoft", desc: "Merge two sorted linked lists and return a new sorted list. Do it iteratively.", pattern: "Two Pointers — compare heads and advance the smaller one", hint: "Create dummy head. Use pointer curr. While both lists have nodes: compare l1.val and l2.val, append smaller to curr.next and advance that list.", why: "Merging sorted sequences is the core of: merge-sort based joins in Spark (merge phase), merging sorted output partitions, K-way merge for multi-source sorted ingestion." },
+  { id: 30, title: "Remove Nth Node From End of List", diff: "M", topic: "LinkedList", companies: "Amazon · Facebook", desc: "Remove the nth node from the end of a linked list and return the head. Do it in one pass.", pattern: "Two Pointers — gap of n between fast and slow", hint: "Advance fast pointer n+1 steps ahead. Then move both fast and slow simultaneously until fast is null. Now slow.next is the nth from end — skip it.", why: "The 'gap pointer' technique represents offset-based window operations: processing records with a fixed lookback, finding the record K steps before the current one in a stream." },
+
+  // ── TREES (6) ──────────────────────────────────────────────
+  { id: 31, title: "Maximum Depth of Binary Tree", diff: "E", topic: "Tree", companies: "Amazon · Google", desc: "Given root of a binary tree, find its maximum depth (number of nodes along the longest root-to-leaf path).", pattern: "DFS (recursive) or BFS (level-by-level count)", hint: "DFS: return 1 + max(maxDepth(left), maxDepth(right)). Base case: null returns 0. BFS: use a queue, increment depth counter for each level.", why: "Tree traversal teaches recursive thinking. In DE: traversing nested JSON/STRUCT structures, traversing organisational hierarchies, and understanding BigQuery query execution trees." },
+  { id: 32, title: "Binary Tree Level Order Traversal", diff: "M", topic: "Tree", companies: "Amazon · Microsoft · Google", desc: "Given root of binary tree, return its node values level by level (BFS order) as a list of lists.", pattern: "BFS with queue — process nodes level by level", hint: "Use a deque. While queue not empty: record queue size (current level size), process exactly that many nodes, append their children.", why: "Level-order traversal is exactly how: Dremel processes queries through its tree of nodes, BFS explores data lineage graphs layer by layer, and you traverse nested schema structures in BigQuery." },
+  { id: 33, title: "Validate Binary Search Tree", diff: "M", topic: "Tree", companies: "Amazon · Google · Facebook", desc: "Given root of a binary tree, determine if it is a valid BST (left subtree < node < right subtree, recursively).", pattern: "DFS with min/max bounds passed down recursively", hint: "Pass (min_val, max_val) bounds at each node. Left child: max_val becomes current node's value. Right child: min_val becomes current.", why: "Constraint propagation through recursive structures maps to: validating schema constraints in nested data, enforcing business rules that depend on parent context." },
+  { id: 34, title: "Lowest Common Ancestor of BST", diff: "M", topic: "Tree", companies: "Amazon · Facebook · Microsoft", desc: "Find the lowest common ancestor (LCA) of two given nodes in a BST.", pattern: "DFS — if both nodes are in same subtree, recurse. Otherwise current node is LCA.", hint: "If both p,q < root.val → LCA is in left subtree. If both > root.val → in right subtree. Otherwise root is the LCA.", why: "LCA in trees models: finding the common ancestor in an org hierarchy, finding the common root in a data lineage DAG, and the shared upstream dependency in a pipeline dependency graph." },
+  { id: 35, title: "Binary Tree Path Sum", diff: "E", topic: "Tree", companies: "Amazon · Microsoft", desc: "Given root of a binary tree and a target sum, return true if there is a root-to-leaf path where node values sum to target.", pattern: "DFS — subtract current node's value, check if leaf with remainder 0", hint: "Recursive: at each node subtract node.val from target. At a leaf, check if remaining target == 0. Recurse on left/right subtrees.", why: "Path sum in trees models: tracing data transformations from source to sink (does this pipeline path produce the expected output?), validating that end-to-end data flow meets constraints." },
+  { id: 36, title: "Serialize and Deserialize Binary Tree", diff: "H", topic: "Tree", companies: "Google · Facebook · Amazon", desc: "Design an algorithm to serialize a binary tree to a string and deserialize the string back to the original tree.", pattern: "BFS serialisation with null markers — or preorder DFS", hint: "Serialise: BFS, write each node value separated by commas, use 'null' for missing nodes. Deserialise: split by comma, use queue to reconstruct level by level.", why: "Serialisation is a CORE DE concept — you serialise data structures to: write DataFrames to Parquet, serialise Spark RDDs to shuffle files, transmit Kafka messages with Avro/Protobuf." },
+
+  // ── DYNAMIC PROGRAMMING (7) ────────────────────────────────
+  { id: 37, title: "Climbing Stairs", diff: "E", topic: "DynamicProg", companies: "Amazon · Google", desc: "You can climb 1 or 2 steps at a time. How many distinct ways to reach the top of n stairs?", pattern: "Fibonacci DP — dp[n] = dp[n-1] + dp[n-2]", hint: "dp[1]=1, dp[2]=2. Each subsequent step: dp[i] = dp[i-1] + dp[i-2]. Optimise to O(1) space with just two variables.", why: "Fibonacci DP introduces overlapping subproblems and memoisation — the conceptual basis for: incremental aggregation in streaming, partition-based processing where each depends on prior state." },
+  { id: 38, title: "House Robber", diff: "M", topic: "DynamicProg", companies: "Amazon · Microsoft", desc: "Rob houses in a line, but cannot rob two adjacent houses. Find the maximum amount you can rob.", pattern: "1D DP — dp[i] = max(dp[i-1], dp[i-2] + nums[i])", hint: "At each house: either skip it (take dp[i-1]) or rob it (take dp[i-2] + current). Space can be optimized to O(1).", why: "1D DP with a constraint models: optimal scheduling with exclusion constraints, selecting the best non-overlapping time windows, and partition selection strategies in incremental processing." },
+  { id: 39, title: "Coin Change", diff: "M", topic: "DynamicProg", companies: "Amazon · Google · Microsoft", desc: "Given coin denominations and an amount, find the minimum number of coins needed. Return -1 if impossible.", pattern: "Bottom-up DP — dp[amount] = min coins to make that amount", hint: "Initialise dp[0]=0, dp[1..amount]=infinity. For each amount from 1 to target: check all coins and find min combination.", why: "Optimal combination / minimum cost DP models: finding the minimum number of batch jobs to process a dataset, optimal resource allocation (minimum executors to finish in time), minimising data pipeline stages." },
+  { id: 40, title: "Longest Increasing Subsequence (LIS)", diff: "M", topic: "DynamicProg", companies: "Microsoft · Google", desc: "Find the length of the longest strictly increasing subsequence in an unsorted array.", pattern: "DP O(n²) or Patience Sorting + Binary Search O(n log n)", hint: "DP: dp[i] = length of LIS ending at index i. Check all j < i where nums[j] < nums[i] and maximize.", why: "LIS pattern appears in: finding the longest run of increasing metrics (growing revenue streaks), detecting trend direction changes in time series data, and understanding the theoretical basis for Timsort." },
+  { id: 41, title: "0/1 Knapsack", diff: "M", topic: "DynamicProg", companies: "Amazon · Google", desc: "Given items with weights and values, and a capacity W, maximise total value without exceeding capacity.", pattern: "2D DP — dp[i][w] = max value using first i items with capacity w", hint: "dp[i][w] = max(dp[i-1][w], dp[i-1][w-weight[i]] + value[i]). Can be optimized to a 1D array iterating backwards.", why: "Resource-constrained optimisation is fundamental to: executor memory allocation (pack tasks without exceeding memory), data pipeline scheduling (maximise throughput within compute budget), and cost-optimised query planning." },
+  { id: 42, title: "Word Break", diff: "M", topic: "DynamicProg", companies: "Amazon · Google · Facebook", desc: "Given a string and a dictionary of words, determine if the string can be segmented into dictionary words.", pattern: "DP with boolean array — dp[i] = can string[0..i] be segmented", hint: "dp[0]=True. For i from 1 to n: check all j < i if dp[j] is True and string[j:i] is in dictionary.", why: "Segmentation DP models: parsing structured data formats, tokenising log strings into known event types, and determining whether a data stream can be broken into valid records matching a schema." },
+  { id: 43, title: "Longest Common Subsequence", diff: "M", topic: "DynamicProg", companies: "Google · Amazon", desc: "Given two strings, find the length of their longest common subsequence (characters need not be contiguous).", pattern: "2D DP — dp[i][j] = LCS of text1[0..i] and text2[0..j]", hint: "If text1[i-1]==text2[j-1]: match! dp[i][j]=dp[i-1][j-1]+1. Else, look left and up: max(dp[i-1][j], dp[i][j-1]).", why: "LCS is the mathematical basis for: schema diff/migration (finding common columns between two schema versions), record linkage (finding common attributes between two datasets), and version comparison in Delta Lake time travel." },
+
+  // ── GRAPH (7) ──────────────────────────────────────────────
+  { id: 44, title: "Number of Islands", diff: "M", topic: "Graph", companies: "Amazon · Google · Facebook", desc: "Given a 2D grid of '1' (land) and '0' (water), count the number of islands (connected components).", pattern: "BFS or DFS on grid — mark visited cells", hint: "For each unvisited '1', run BFS/DFS to mark all connected '1's as visited, increment island count.", why: "Connected components / flood fill on grids directly models: clustering related data records, finding connected data segments in sparse matrices, and partition connectivity analysis in distributed storage." },
+  { id: 45, title: "Course Schedule (Topological Sort)", diff: "M", topic: "Graph", companies: "Google · Facebook · Amazon", desc: "Given n courses and prerequisite pairs, determine if you can finish all courses (detect if a cycle exists in a directed graph).", pattern: "BFS Topological Sort (Kahn's) — track in-degrees", hint: "Build adjacency list and in-degree array. Enqueue nodes with in-degree 0. Reduce neighbors' in-degree when processing. Valid if all nodes processed.", why: "DIRECTLY RELEVANT: Airflow DAG validation uses topological sort to detect cycles. Spark's DAG scheduler uses topological ordering to determine stage execution order. Understanding this is essential for explaining how Airflow and Spark work internally." },
+  { id: 46, title: "Course Schedule II – Return Order", diff: "M", topic: "Graph", companies: "Google · Facebook", desc: "Return the order to take all courses given prerequisites. If impossible (cycle exists), return empty array.", pattern: "Topological Sort — return nodes in processing order", hint: "Same as Course Schedule but record the order nodes are dequeued from the BFS. If total processed < n, a cycle exists.", why: "Topological ordering gives the exact task execution sequence — this IS how Airflow determines task run order, how Spark determines stage execution sequence, and how any dependency-based scheduler works." },
+  { id: 47, title: "Clone Graph", diff: "M", topic: "Graph", companies: "Amazon · Facebook · Google", desc: "Given a reference to a node in a connected undirected graph, return a deep copy (clone) of the graph.", pattern: "BFS/DFS + HashMap — old_node → new_node mapping", hint: "Use a HashMap to map each original node to its clone. Track visited nodes to avoid infinite recursion and link cloned neighbors properly.", why: "Graph cloning with a visited map is the basis for: deep copying complex pipeline configurations, creating test environments that mirror production DAG structures, and understanding how Spark serialises task closures to executors." },
+  { id: 48, title: "Number of Connected Components", diff: "M", topic: "Graph", companies: "LinkedIn · Amazon", desc: "Given n nodes and a list of undirected edges, return the number of connected components.", pattern: "Union-Find (Disjoint Set Union) — O(n α(n)) ≈ O(n)", hint: "Initialise each node as its own parent. For each edge, union the two nodes. Count unique roots remaining.", why: "Union-Find appears in: finding clusters of related data, detecting whether two pipeline branches eventually converge, network connectivity in distributed system design, and building the foundation for Kruskal's MST." },
+  { id: 49, title: "Word Ladder", diff: "H", topic: "Graph", companies: "Amazon · Google · LinkedIn", desc: "Given beginWord, endWord, and a word list, find the shortest transformation sequence where each step changes exactly one letter.", pattern: "BFS on implicit graph — each word is a node, neighbours differ by 1 char", hint: "BFS from beginWord. For each word, generate all possible 1-char changes. If matching an unvisited word in list, enqueue and track level.", why: "BFS shortest path on an implicit graph models: finding the minimum number of transformation steps in data migration, shortest ETL path between source and target schemas, minimum hops in data lineage from source to report." },
+  { id: 50, title: "LRU Cache", diff: "M", topic: "Graph", companies: "Amazon · Google · Facebook · All", desc: "Design a data structure that follows LRU (Least Recently Used) eviction policy. Implement get(key) and put(key,value) in O(1).", pattern: "HashMap + Doubly Linked List — O(1) get/put/evict", hint: "HashMap maps key → node (O(1) lookup). Doubly linked list maintains access order (most recent at head, least recent at tail). Evict tail when over capacity.", why: "LRU Cache is asked at EVERY top company. In DE it models: Spark's storage-level cache eviction, BigQuery's slot scheduling, buffer pool management in databases, and HTTP cache design. Understanding it shows systems design maturity." }
+];
+
+const STORAGE_KEY = "de_dsa_progress_v2";
+let solved = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"));
+
+let tFilter = "All";
+let dFilter = "All";
+let sel = null;
+let searchTerm = "";
+let showSolvedOnly = false;
+
+function bg(t) { return TC[t] || "#333"; }
+function lt(t) { return TL[t] || "#f5f5f5"; }
+const DL = { E: "Easy", M: "Medium", H: "Hard" };
+
+function renderStats() {
+  const p = Math.round(solved.size / 50 * 100);
+  document.getElementById("pbar").style.width = p + "%";
+  document.getElementById("plbl").textContent = `${solved.size} of 50 solved · ${p}% complete`;
+  
+  const diffs = [["E", "Easy", "#065f46"], ["M", "Med", "#92400e"], ["H", "Hard", "#991b1b"]];
+  const rows = diffs.map(([d, l, c]) => {
+    const total = QS.filter(q => q.diff === d).length;
+    const s = QS.filter(q => q.diff === d && solved.has(q.id)).length;
+    return `<div class="stat"><div class="stat-v" style="color:${c}">${s}/${total}</div><div class="stat-lbl">${l}</div></div>`;
+  });
+  
+  const trows = TOPICS.map(t => {
+    const total = QS.filter(q => q.topic === t).length;
+    const s = QS.filter(q => q.topic === t && solved.has(q.id)).length;
+    return `<div class="stat"><div class="stat-v" style="color:${bg(t)}">${s}/${total}</div><div class="stat-lbl" style="font-size:9px">${t.replace("DynamicProg","DP").replace("LinkedList","Lists")}</div></div>`;
+  });
+  
+  document.getElementById("st-area").innerHTML = [...rows, ...trows].join("");
+}
+
+function renderFilters() {
+  const tf = TOPICS.map(t => {
+    const on = tFilter === t;
+    return `<button class="fbtn" style="${on ? `background:${bg(t)};color:#fff;font-weight:600;` : 'background:#1e293b;'}" onclick="setT('${t}')">${t.replace("DynamicProg","DP").replace("LinkedList","Lists")}</button>`;
+  });
+  
+  const df = ["All", "E", "M", "H"].map(d => {
+    const on = dFilter === d;
+    return `<button class="fbtn" style="${on ? 'background:#38bdf8;color:#0f172a;font-weight:600;' : 'background:#1e293b;'}" onclick="setD('${d}')">${d === "All" ? "All Diff" : DL[d]}</button>`;
+  });
+  
+  document.getElementById("farea").innerHTML = `
+    <span style="font-size:12px;color:#94a3b8;font-weight:600;margin-right:4px">Topic:</span>${tf.join("")}
+    <div class="sep"></div>
+    <span style="font-size:12px;color:#94a3b8;font-weight:600;margin-right:4px">Diff:</span>${df.join("")}
+    <span style="margin-left:auto;font-size:12px;color:#94a3b8;font-weight:500;">${filtered().length} Match</span>
+  `;
+}
+
+function filtered() {
+  return QS.filter(q =>
+    (tFilter === "All" || q.topic === tFilter) &&
+    (dFilter === "All" || q.diff === dFilter) &&
+    (!showSolvedOnly || solved.has(q.id)) &&
+    (!searchTerm || 
+      q.title.toLowerCase().includes(searchTerm) || 
+      q.topic.toLowerCase().includes(searchTerm) || 
+      q.pattern.toLowerCase().includes(searchTerm) || 
+      q.desc.toLowerCase().includes(searchTerm)
+    )
+  );
+}
+
+function renderDet() {
+  const el = document.getElementById("det-area");
+  if (!sel) { el.innerHTML = ""; return; }
+  const q = sel;
+  const c = bg(q.topic);
+  const isDone = solved.has(q.id);
+  
+  el.innerHTML = `
+    <div class="det" style="border-color: ${c}">
+      <div class="dtop" style="background:${c}"></div>
+      <div class="dbd">
+        <div class="dhead">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-size:22px;font-weight:700;color:white">#${q.id} ${q.title}</span>
+              <span class="dbadge ${q.diff}">${DL[q.diff]}</span>
+              <span class="ctopic" style="background:${lt(q.topic)};color:${c};margin-bottom:0">${q.topic}</span>
+            </div>
+            <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+              ${q.companies.split("·").map(co => `<span class="co-tag">${co.trim()}</span>`).join("")}
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button onclick="toggleS(${q.id})" style="padding:8px 16px;font-weight:600;border-radius:12px;border:1px solid ${isDone ? '#22c55e' : 'rgba(255,255,255,0.1)'};background:${isDone ? '#22c55e' : '#1e293b'};color:white;cursor:pointer;">
+              ${isDone ? "✓ Solved" : "Mark Solved"}
+            </button>
+            <button class="dclose" onclick="closeDet()" style="background:transparent;border:none;font-size:16px;">✕</button>
+          </div>
+        </div>
+        <div class="dbox"><div class="dlbl">PROBLEM</div><div class="dtext">${q.desc}</div></div>
+        <div class="dbox"><div class="dlbl">PATTERN</div><div class="dtext" style="font-weight:600;color:#38bdf8">${q.pattern}</div></div>
+        <div class="hint-box"><div class="dlbl" style="color:#eab308">APPROACH HINT</div><div class="dtext">${q.hint}</div></div>
+        <div class="why-box"><div class="dlbl" style="color:#22c55e">WHY THIS MATTERS FOR DE/DA</div><div class="dtext">${q.why}</div></div>
+        <div class="dnav">
+          <button class="dnbtn" onclick="navQ(-1)" ${q.id === 1 ? "disabled" : ""}>← Q${q.id - 1}</button>
+          <span style="font-size:13px;color:#94a3b8;font-weight:600;">${q.id} of 50</span>
+          <button class="dnbtn" onclick="navQ(1)" ${q.id === 50 ? "disabled" : ""}>Q${q.id + 1} →</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderGrid() {
+  const qs = filtered();
+  document.getElementById("grid").innerHTML = qs.map(q => {
+    const c = bg(q.topic);
+    const isDone = solved.has(q.id);
+    const isSel = sel && sel.id === q.id;
+    return `
+      <div class="card ${isDone ? 'solved' : ''} ${isSel ? 'sel' : ''}" onclick="selQ(${q.id})" style="${isSel ? `color:${c}` : ''}">
+        <div class="ctop" style="background:${c}"></div>
+        <div class="cb">
+          <div class="crow">
+            <div style="display:flex;align-items:center;gap:6px">
+              <div class="cnum" style="background:${lt(q.topic)};color:${c}">#${q.id}</div>
+              <span class="dbadge ${q.diff}" style="padding:2px 8px;font-size:10px">${DL[q.diff]}</span>
+            </div>
+            <button class="cbtn ${isDone ? 'done-btn' : ''}" onclick="event.stopPropagation();toggleS(${q.id})">${isDone ? "✓" : ""}</button>
+          </div>
+          <div class="ctitle">${q.title}</div>
+          <span class="ctopic" style="background:${lt(q.topic)};color:${c}">${q.topic}</span>
+          <div class="cdesc">${q.desc}</div>
+          <div class="cpat">Pattern: ${q.pattern.split("—")[0].trim()}</div>
+        </div>
+      </div>
+    `;
+  }).join("") || `<div style="grid-column:1/-1;text-align:center;padding:48px;color:#94a3b8">No questions matches your active filters.</div>`;
+}
+
+function render() { renderStats(); renderFilters(); renderDet(); renderGrid(); }
+
+window.setT = t => { tFilter = tFilter === t ? "All" : t; render(); };
+window.setD = d => { dFilter = dFilter === d ? "All" : d; render(); };
+window.selQ = id => { sel = sel && sel.id === id ? null : QS.find(q => q.id === id); render(); if(sel) document.getElementById("det-area").scrollIntoView({behavior:"smooth",block:"nearest"}); };
+window.closeDet = () => { sel = null; render(); };
+window.navQ = dir => { if (!sel) return; const idx = QS.findIndex(q => q.id === sel.id); const n = QS[idx + dir]; if (n) sel = n; render(); };
+
+window.toggleS = id => {
+  solved.has(id) ? solved.delete(id) : solved.add(id);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...solved]));
+  render();
+};
+
+document.getElementById("searchInput").addEventListener("input", e => {
+  searchTerm = e.target.value.toLowerCase().trim();
+  renderGrid();
+});
+
+document.getElementById("showSolvedBtn").addEventListener("click", () => {
+  showSolvedOnly = !showSolvedOnly;
+  const btn = document.getElementById("showSolvedBtn");
+  btn.classList.toggle("active", showSolvedOnly);
+  btn.textContent = showSolvedOnly ? "Showing Solved" : "Show Solved Only";
+  renderGrid();
+});
+
+document.getElementById("resetProgressBtn").addEventListener("click", () => {
+  if (confirm("Are you sure you want to clear your full progress?")) {
+    solved.clear();
+    localStorage.removeItem(STORAGE_KEY);
+    render();
+  }
+});
+
+render();
+</script>
+</body>
+</html>
