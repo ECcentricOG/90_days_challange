@@ -15,6 +15,13 @@ CREATE TABLE sales (
     PRIMARY KEY(sale_id, region)
 ) PARTITION BY LIST(region);
 
+CREATE TABLE user_activity (
+    user_id INT,
+    activity_id INT,
+    activity_date DATE,
+    PRIMARY KEY(user_id, activity_id)
+) PARTITION BY HASH(user_id);
+
 
 -- Create Partitons 
 Create table ord_tab_q1 
@@ -49,3 +56,20 @@ FOR VALUES IN ('East');
 CREATE TABLE sales_west
 PARTITION OF sales
 FOR VALUES IN ('West');
+
+
+CREATE TABLE user_activity_p0
+PARTITION OF user_activity
+FOR VALUES WITH (MODULUS 4, REMAINDER 0);
+
+CREATE TABLE user_activity_p1
+PARTITION OF user_activity
+FOR VALUES WITH (MODULUS 4, REMAINDER 1);
+
+CREATE TABLE user_activity_p2
+PARTITION OF user_activity
+FOR VALUES WITH (MODULUS 4, REMAINDER 2);
+
+CREATE TABLE user_activity_p3
+PARTITION OF user_activity
+FOR VALUES WITH (MODULUS 4, REMAINDER 3);
