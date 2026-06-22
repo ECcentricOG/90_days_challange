@@ -16,6 +16,4 @@ def top_k_frequent(nums:List[int], k:int) -> List[int]:
     ans:List[int] = []
 
     for i in range(k):
-        ans.append(sorted_list[i][0])
 
-    return ans
