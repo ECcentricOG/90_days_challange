@@ -3,6 +3,8 @@
 # ② group events by user_id 
 # ③ find users with 5+ events within any 1-hour window. Which data structures do you choose and why?
 
+from datetime import datetime, timedelta
+
 logs = [
     # User u101 (will qualify)
     {"event_id":"e001","user_id":"u101","timestamp":"2026-06-25T09:00:00","event_type":"login"},
@@ -11,55 +13,39 @@ logs = [
     {"event_id":"e004","user_id":"u101","timestamp":"2026-06-25T09:18:00","event_type":"click"},
     {"event_id":"e005","user_id":"u101","timestamp":"2026-06-25T09:25:00","event_type":"view"},
     {"event_id":"e006","user_id":"u101","timestamp":"2026-06-25T09:40:00","event_type":"logout"},
-
-    # User u102
     {"event_id":"e007","user_id":"u102","timestamp":"2026-06-25T08:00:00","event_type":"login"},
     {"event_id":"e008","user_id":"u102","timestamp":"2026-06-25T10:00:00","event_type":"view"},
     {"event_id":"e009","user_id":"u102","timestamp":"2026-06-25T12:00:00","event_type":"search"},
     {"event_id":"e010","user_id":"u102","timestamp":"2026-06-25T14:00:00","event_type":"logout"},
-
-    # User u103 (will qualify)
     {"event_id":"e011","user_id":"u103","timestamp":"2026-06-25T11:00:00","event_type":"login"},
     {"event_id":"e012","user_id":"u103","timestamp":"2026-06-25T11:10:00","event_type":"view"},
     {"event_id":"e013","user_id":"u103","timestamp":"2026-06-25T11:20:00","event_type":"click"},
     {"event_id":"e014","user_id":"u103","timestamp":"2026-06-25T11:30:00","event_type":"view"},
     {"event_id":"e015","user_id":"u103","timestamp":"2026-06-25T11:40:00","event_type":"search"},
     {"event_id":"e016","user_id":"u103","timestamp":"2026-06-25T11:50:00","event_type":"logout"},
-
-    # User u104
     {"event_id":"e017","user_id":"u104","timestamp":"2026-06-25T07:00:00","event_type":"login"},
     {"event_id":"e018","user_id":"u104","timestamp":"2026-06-25T09:30:00","event_type":"view"},
     {"event_id":"e019","user_id":"u104","timestamp":"2026-06-25T12:15:00","event_type":"search"},
     {"event_id":"e020","user_id":"u104","timestamp":"2026-06-25T16:00:00","event_type":"logout"},
-
-    # User u105
     {"event_id":"e021","user_id":"u105","timestamp":"2026-06-25T10:00:00","event_type":"login"},
     {"event_id":"e022","user_id":"u105","timestamp":"2026-06-25T10:50:00","event_type":"view"},
     {"event_id":"e023","user_id":"u105","timestamp":"2026-06-25T12:10:00","event_type":"search"},
     {"event_id":"e024","user_id":"u105","timestamp":"2026-06-25T13:30:00","event_type":"click"},
     {"event_id":"e025","user_id":"u105","timestamp":"2026-06-25T15:00:00","event_type":"logout"},
-
-    # User u106 (will qualify)
     {"event_id":"e026","user_id":"u106","timestamp":"2026-06-25T13:00:00","event_type":"login"},
     {"event_id":"e027","user_id":"u106","timestamp":"2026-06-25T13:08:00","event_type":"view"},
     {"event_id":"e028","user_id":"u106","timestamp":"2026-06-25T13:16:00","event_type":"view"},
     {"event_id":"e029","user_id":"u106","timestamp":"2026-06-25T13:24:00","event_type":"click"},
     {"event_id":"e030","user_id":"u106","timestamp":"2026-06-25T13:32:00","event_type":"search"},
     {"event_id":"e031","user_id":"u106","timestamp":"2026-06-25T13:40:00","event_type":"logout"},
-
-    # User u107
     {"event_id":"e032","user_id":"u107","timestamp":"2026-06-25T08:15:00","event_type":"login"},
     {"event_id":"e033","user_id":"u107","timestamp":"2026-06-25T10:45:00","event_type":"view"},
     {"event_id":"e034","user_id":"u107","timestamp":"2026-06-25T13:15:00","event_type":"click"},
     {"event_id":"e035","user_id":"u107","timestamp":"2026-06-25T15:45:00","event_type":"logout"},
-
-    # User u108
     {"event_id":"e036","user_id":"u108","timestamp":"2026-06-25T09:00:00","event_type":"login"},
     {"event_id":"e037","user_id":"u108","timestamp":"2026-06-25T09:20:00","event_type":"view"},
     {"event_id":"e038","user_id":"u108","timestamp":"2026-06-25T11:20:00","event_type":"search"},
     {"event_id":"e039","user_id":"u108","timestamp":"2026-06-25T13:20:00","event_type":"logout"},
-
-    # Duplicates (newer timestamps)
     {"event_id":"e003","user_id":"u101","timestamp":"2026-06-25T09:15:00","event_type":"search"},
     {"event_id":"e010","user_id":"u102","timestamp":"2026-06-25T14:05:00","event_type":"logout"},
     {"event_id":"e014","user_id":"u103","timestamp":"2026-06-25T11:35:00","event_type":"view"},
@@ -68,8 +54,6 @@ logs = [
     {"event_id":"e031","user_id":"u106","timestamp":"2026-06-25T13:50:00","event_type":"logout"},
     {"event_id":"e035","user_id":"u107","timestamp":"2026-06-25T15:55:00","event_type":"logout"},
     {"event_id":"e039","user_id":"u108","timestamp":"2026-06-25T13:30:00","event_type":"logout"},
-
-    # Additional events
     {"event_id":"e040","user_id":"u101","timestamp":"2026-06-25T17:00:00","event_type":"purchase"},
     {"event_id":"e041","user_id":"u102","timestamp":"2026-06-25T17:10:00","event_type":"purchase"},
     {"event_id":"e042","user_id":"u103","timestamp":"2026-06-25T17:20:00","event_type":"purchase"},
@@ -78,4 +62,28 @@ logs = [
     {"event_id":"e045","user_id":"u106","timestamp":"2026-06-25T17:50:00","event_type":"purchase"},
 ]
 
+# Deduplicate
+latest_events = {}
+for event in logs:
+    event_id = event["event_id"]
+    current_time = datetime.fromisoformat(event["timestamp"])
+    if event_id not in latest_events:
+        latest_events[event_id] = event
+    else:
+        stored_time = datetime.fromisoformat(latest_events[event_id]["timestamp"])
+        if current_time > stored_time:
+            latest_events[event_id] = event
 
+# Grouping with users
+from collections import defaultdict
+user_events = defaultdict(list)
+for event in logs:
+    user_events[event["user_id"]].append(event)
+
+# User with 7 plus events
+addicted_users = [
+    user_id
+    for user_id in user_events
+    if len(user_events[user_id]) >= 7
+]
+print(addicted_users)
