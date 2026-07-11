@@ -27,8 +27,8 @@ def db_connect():
         conn = psycopg2.connect(
             host="localhost",
             database="challange",
-            user="psql",
-            password="psql",
+            user="umeshunde",
+            #password="psql",
             port=5432
         )
         logger.info("Connected to PSQL DB")
@@ -49,3 +49,15 @@ def db_connect():
                 logger.info("DB Connections closed")
             except Exception as e:
                 logger.warning(f"Failed to close connection cleanly: {e}")
+
+def extract_data(query, param=None):
+    with db_connect() as conn:
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(query, param)
+                return cursor.fetchall()
+        except psycopg2.Error as e:
+            logger.error(e)
+            raise DBQueryError(f"Query failed: {e}")
+
+print(extract_data("select * from orders"))
