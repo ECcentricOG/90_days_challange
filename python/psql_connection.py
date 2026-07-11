@@ -59,5 +59,3 @@ def extract_data(query, param=None):
         except psycopg2.Error as e:
             logger.error(e)
             raise DBQueryError(f"Query failed: {e}")
-
-print(extract_data("select * from orders"))

@@ -1,0 +1,105 @@
+order_id,customer_id,order_date,amount,payment_method,status
+1,31,2025-03-22,1519.52,Debit Card,Shipped
+2,21,2025-01-09,2824.60,UPI,Delivered
+3,21,2026-04-15,3569.34,Debit Card,Delivered
+4,46,2026-04-27,2149.08,Credit Card,Delivered
+5,34,2025-09-06,2927.47,UPI,Delivered
+6,22,2025-12-02,822.78,Credit Card,Delivered
+7,84,2025-10-23,933.32,UPI,Delivered
+8,47,2026-05-10,661.84,Credit Card,Delivered
+9,59,2025-01-08,4099.97,Credit Card,Delivered
+10,30,2025-04-26,2583.33,UPI,Delivered
+11,29,2025-09-03,3751.37,Credit Card,Delivered
+12,44,2025-03-09,1864.08,Credit Card,Delivered
+13,38,2025-11-28,1632.99,Debit Card,Delivered
+14,52,2025-07-12,1875.49,Credit Card,Delivered
+15,87,2025-01-21,921.19,UPI,Shipped
+16,41,2025-03-27,3165.00,Credit Card,Delivered
+17,78,2025-05-18,4427.87,UPI,Shipped
+18,21,2025-02-01,3754.16,Credit Card,Delivered
+19,25,2026-03-23,3886.27,UPI,Delivered
+20,54,2025-07-21,2352.91,Credit Card,Delivered
+21,71,2025-01-12,2367.10,Net Banking,Delivered
+22,20,2026-03-12,1134.44,Debit Card,Delivered
+23,62,2026-03-21,4049.21,UPI,Delivered
+24,66,2026-03-31,3619.86,Credit Card,Delivered
+25,52,2025-03-25,2578.95,Credit Card,Shipped
+26,78,2026-01-28,1945.81,Credit Card,Delivered
+27,3,2025-12-30,2336.56,UPI,Delivered
+28,18,2026-03-22,559.69,Debit Card,Delivered
+29,50,2025-01-27,996.40,Credit Card,Delivered
+30,33,2026-01-31,2730.90,UPI,Delivered
+31,68,2025-12-16,4207.07,Credit Card,Delivered
+32,68,2025-02-24,3935.17,Debit Card,Delivered
+33,18,2026-01-16,1050.24,Credit Card,Delivered
+34,72,2025-06-16,4695.04,Net Banking,Delivered
+35,37,2025-12-15,3432.71,Debit Card,Delivered
+36,78,2026-01-27,3340.84,Debit Card,Shipped
+37,31,2026-02-02,3828.77,Debit Card,Pending
+38,6,2025-05-28,2368.04,UPI,Delivered
+39,61,2025-04-10,3376.48,Debit Card,Delivered
+40,42,2026-05-08,1806.46,Credit Card,Delivered
+41,18,2025-05-25,3933.62,Net Banking,Delivered
+42,70,2025-10-16,4740.11,UPI,Delivered
+43,42,2025-11-18,1100.57,Debit Card,Delivered
+44,5,2025-01-22,4514.19,Net Banking,Delivered
+45,58,2025-02-28,4234.53,Debit Card,Delivered
+46,35,2025-10-16,646.57,Net Banking,Delivered
+47,56,2026-02-12,2906.08,Credit Card,Delivered
+48,19,2025-03-06,1402.44,Debit Card,Shipped
+49,28,2025-07-21,1848.66,Net Banking,Shipped
+50,10,2026-03-12,4240.10,Credit Card,Delivered
+51,18,2025-01-21,3859.51,Credit Card,Delivered
+52,81,2025-10-04,1397.70,Credit Card,Delivered
+53,24,2025-02-22,1779.68,Credit Card,Delivered
+54,76,2025-12-05,1159.46,Net Banking,Shipped
+55,81,2026-04-14,1450.28,UPI,Delivered
+56,26,2025-12-10,1095.47,Debit Card,Delivered
+57,56,2026-03-21,1552.01,UPI,Delivered
+58,70,2025-12-14,2518.28,UPI,Delivered
+59,82,2026-05-01,718.45,Credit Card,Delivered
+60,55,2025-09-08,4076.98,UPI,Shipped
+61,73,2025-02-23,2297.13,Credit Card,Delivered
+62,25,2025-03-05,588.61,Debit Card,Delivered
+63,76,2025-01-27,1052.61,Debit Card,Delivered
+64,4,2026-01-09,2751.86,Debit Card,Delivered
+65,77,2025-12-18,1319.98,Credit Card,Delivered
+66,13,2025-02-22,3505.83,Debit Card,Shipped
+67,89,2026-01-24,1660.26,Debit Card,Delivered
+68,22,2025-03-13,4264.29,Net Banking,Delivered
+69,66,2026-01-19,1951.99,Net Banking,Delivered
+70,71,2025-02-27,742.49,Debit Card,Delivered
+71,31,2026-02-19,3614.88,Credit Card,Cancelled
+72,24,2026-01-21,3583.61,Credit Card,Shipped
+73,90,2025-02-13,1751.12,Credit Card,Delivered
+74,49,2025-12-03,4097.91,UPI,Delivered
+75,24,2025-03-12,4306.73,Debit Card,Delivered
+76,4,2025-12-27,4706.68,UPI,Delivered
+77,61,2025-06-16,1793.76,Credit Card,Delivered
+78,48,2025-03-25,4873.31,Debit Card,Delivered
+79,36,2026-02-15,3021.70,Credit Card,Delivered
+80,5,2025-03-21,4024.41,Net Banking,Delivered
+81,59,2025-01-14,908.33,Net Banking,Delivered
+82,45,2025-02-15,1100.19,Debit Card,Delivered
+83,89,2025-07-13,2452.94,Debit Card,Cancelled
+84,11,2025-07-04,2107.41,UPI,Cancelled
+85,31,2025-08-19,3506.87,Debit Card,Shipped
+86,51,2025-03-19,3594.50,Net Banking,Delivered
+87,77,2026-01-28,2884.62,Credit Card,Delivered
+88,24,2025-11-30,4768.22,Credit Card,Delivered
+89,78,2025-09-27,3359.37,Debit Card,Delivered
+90,35,2025-05-29,3065.63,Debit Card,Delivered
+91,6,2026-02-16,2446.01,Credit Card,Shipped
+92,81,2026-03-31,704.12,UPI,Shipped
+93,30,2026-02-17,4760.41,Net Banking,Delivered
+94,41,2026-02-06,2974.09,Net Banking,Delivered
+95,84,2025-01-02,513.11,Credit Card,Delivered
+96,76,2025-03-27,648.55,Debit Card,Cancelled
+97,26,2026-03-01,764.82,UPI,Shipped
+98,17,2026-04-27,1091.70,Debit Card,Delivered
+99,33,2026-01-09,3065.88,UPI,Delivered
+100,88,2025-04-26,737.89,UPI,Delivered
+101,90,2026-01-12,2400.00,UPI,Delivered
+102,91,2026-01-15,1800.00,Credit Card,Delivered
+103,91,2026-02-11,2100.00,UPI,Delivered
+104,92,2025-01-01,900.00,Debit Card,Delivered
