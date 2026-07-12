@@ -1,0 +1,106 @@
+customer_id,customer_name,email,city,signup_date
+1,Aarav Sharma,aarav.sharma@gmail.com,Mumbai,2024-01-15
+2,Vivaan Patel,vivaan.patel@yahoo.com,Pune,2024-02-10
+3,Aditya Joshi,aditya.joshi@gmail.com,Delhi,2024-03-12
+4,Krishna Mehta,krishna.mehta@outlook.com,Bangalore,2024-01-22
+5,Arjun Nair,arjun.nair@gmail.com,Chennai,2024-04-18
+6,Sai Verma,sai.verma@yahoo.com,Hyderabad,2024-05-02
+7,Rohan Kulkarni,rohan.k@gmail.com,Nagpur,2024-02-19
+8,Rahul Yadav,rahul.yadav@gmail.com,Indore,2024-01-05
+9,Karan Singh,karan.singh@gmail.com,Jaipur,2024-03-28
+10,Mohit Deshmukh,mohit.d@gmail.com,Nashik,2024-06-01
+11,Sneha Patil,sneha.patil@gmail.com,Mumbai,2024-02-12
+12,Priya Shah,priya.shah@yahoo.com,Ahmedabad,2024-03-15
+13,Ananya Rao,ananya.rao@gmail.com,Bangalore,2024-01-20
+14,Pooja Iyer,pooja.iyer@gmail.com,Chennai,2024-04-01
+15,Neha Kapoor,neha.kapoor@gmail.com,Delhi,2024-05-11
+16,Ritika Jain,ritika.jain@yahoo.com,Pune,2024-02-09
+17,Meera Nair,meera.nair@gmail.com,Kochi,2024-03-14
+18,Ishita Verma,ishita.verma@gmail.com,Lucknow,2024-01-27
+19,Kavya Menon,kavya.menon@gmail.com,Hyderabad,2024-04-19
+20,Aditi Kulkarni,aditi.k@gmail.com,Nagpur,2024-06-05
+21,Yash Thakur,yash.t@gmail.com,Bhopal,2024-01-18
+22,Dev Malhotra,dev.m@gmail.com,Delhi,2024-03-09
+23,Nikhil Sinha,nikhil.s@gmail.com,Patna,2024-02-28
+24,Harsh Vora,harsh.v@gmail.com,Surat,2024-04-25
+25,Akash Chavan,akash.c@gmail.com,Mumbai,2024-05-14
+26,Tanya Arora,tanya.a@gmail.com,Delhi,2024-01-31
+27,Simran Kaur,simran.k@gmail.com,Amritsar,2024-02-16
+28,Riya Desai,riya.d@gmail.com,Vadodara,2024-03-21
+29,Naina Gupta,naina.g@gmail.com,Noida,2024-04-08
+30,Diya Sharma,diya.s@gmail.com,Mumbai,2024-05-29
+31,Manish Tiwari,manish.t@gmail.com,Kanpur,2024-02-11
+32,Aman Saxena,aman.s@gmail.com,Lucknow,2024-01-26
+33,Shubham More,shubham.m@gmail.com,Pune,2024-03-30
+34,Tejas Patwardhan,tejas.p@gmail.com,Mumbai,2024-04-22
+35,Varun Shetty,varun.s@gmail.com,Mangalore,2024-05-13
+36,Abhishek Roy,abhishek.r@gmail.com,Kolkata,2024-02-24
+37,Siddharth Bose,sid.b@gmail.com,Kolkata,2024-03-02
+38,Omkar Jagtap,omkar.j@gmail.com,Satara,2024-04-11
+39,Parth Trivedi,parth.t@gmail.com,Ahmedabad,2024-05-17
+40,Dhruv Rana,dhruv.r@gmail.com,Chandigarh,2024-06-09
+41,Aniket Pawar,aniket.p@gmail.com,Kolhapur,2024-02-05
+42,Sagar Bhosale,sagar.b@gmail.com,Solapur,2024-03-10
+43,Raj Patel,raj.p@gmail.com,Surat,2024-04-14
+44,Vivek Kumar,vivek.k@gmail.com,Patna,2024-05-03
+45,Ashwin Rao,ashwin.r@gmail.com,Bangalore,2024-01-12
+46,Gaurav Mishra,gaurav.m@gmail.com,Prayagraj,2024-02-27
+47,Ritesh Jain,ritesh.j@gmail.com,Indore,2024-03-18
+48,Mayur Shinde,mayur.s@gmail.com,Mumbai,2024-04-28
+49,Soham Chatterjee,soham.c@gmail.com,Kolkata,2024-05-06
+50,Atharva Kale,atharva.k@gmail.com,Pune,2024-06-02
+51,Customer_51,customer51@gmail.com,Pune,2024-02-21
+52,Customer_52,customer52@gmail.com,Delhi,2024-02-22
+53,Customer_53,customer53@gmail.com,Bangalore,2024-02-23
+54,Customer_54,customer54@gmail.com,Hyderabad,2024-02-24
+55,Customer_55,customer55@gmail.com,Mumbai,2024-02-25
+56,Customer_56,customer56@gmail.com,Pune,2024-02-26
+57,Customer_57,customer57@gmail.com,Delhi,2024-02-27
+58,Customer_58,customer58@gmail.com,Bangalore,2024-02-28
+59,Customer_59,customer59@gmail.com,Hyderabad,2024-02-29
+60,Customer_60,customer60@gmail.com,Mumbai,2024-03-01
+61,Customer_61,customer61@gmail.com,Pune,2024-03-02
+62,Customer_62,customer62@gmail.com,Delhi,2024-03-03
+63,Customer_63,customer63@gmail.com,Bangalore,2024-03-04
+64,Customer_64,customer64@gmail.com,Hyderabad,2024-03-05
+65,Customer_65,customer65@gmail.com,Mumbai,2024-03-06
+66,Customer_66,customer66@gmail.com,Pune,2024-03-07
+67,Customer_67,customer67@gmail.com,Delhi,2024-03-08
+68,Customer_68,customer68@gmail.com,Bangalore,2024-03-09
+69,Customer_69,customer69@gmail.com,Hyderabad,2024-03-10
+70,Customer_70,customer70@gmail.com,Mumbai,2024-03-11
+71,Customer_71,customer71@gmail.com,Pune,2024-03-12
+72,Customer_72,customer72@gmail.com,Delhi,2024-03-13
+73,Customer_73,customer73@gmail.com,Bangalore,2024-03-14
+74,Customer_74,customer74@gmail.com,Hyderabad,2024-03-15
+75,Customer_75,customer75@gmail.com,Mumbai,2024-03-16
+76,Customer_76,customer76@gmail.com,Pune,2024-03-17
+77,Customer_77,customer77@gmail.com,Delhi,2024-03-18
+78,Customer_78,customer78@gmail.com,Bangalore,2024-03-19
+79,Customer_79,customer79@gmail.com,Hyderabad,2024-03-20
+80,Customer_80,customer80@gmail.com,Mumbai,2024-03-21
+81,Customer_81,customer81@gmail.com,Pune,2024-03-22
+82,Customer_82,customer82@gmail.com,Delhi,2024-03-23
+83,Customer_83,customer83@gmail.com,Bangalore,2024-03-24
+84,Customer_84,customer84@gmail.com,Hyderabad,2024-03-25
+85,Customer_85,customer85@gmail.com,Mumbai,2024-03-26
+86,Customer_86,customer86@gmail.com,Pune,2024-03-27
+87,Customer_87,customer87@gmail.com,Delhi,2024-03-28
+88,Customer_88,customer88@gmail.com,Bangalore,2024-03-29
+89,Customer_89,customer89@gmail.com,Hyderabad,2024-03-30
+90,Customer_90,customer90@gmail.com,Mumbai,2024-03-31
+91,Customer_91,customer91@gmail.com,Pune,2024-04-01
+92,Customer_92,customer92@gmail.com,Delhi,2024-04-02
+93,Customer_93,customer93@gmail.com,Bangalore,2024-04-03
+94,Customer_94,customer94@gmail.com,Hyderabad,2024-04-04
+95,Customer_95,customer95@gmail.com,Mumbai,2024-04-05
+96,Customer_96,customer96@gmail.com,Pune,2024-04-06
+97,Customer_97,customer97@gmail.com,Delhi,2024-04-07
+98,Customer_98,customer98@gmail.com,Bangalore,2024-04-08
+99,Customer_99,customer99@gmail.com,Hyderabad,2024-04-09
+100,Customer_100,customer100@gmail.com,Mumbai,2024-04-10
+101,TechNova,contact@technova.com,Mumbai,2024-01-10
+102,Skyline Retail,sales@skyline.com,Delhi,2024-02-15
+103,Urban Basket,hello@urbanbasket.com,Pune,2024-03-20
+104,NextGen Foods,info@nextgenfoods.com,Bangalore,2024-04-05
+105,BlueWave Tech,support@bluewave.com,Hyderabad,2024-05-18
